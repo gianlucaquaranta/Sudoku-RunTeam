@@ -70,10 +70,14 @@ fun NumberKey(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .height(56.dp),
-        colors = if (isSelected) ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-        else ButtonDefaults.buttonColors()
+        modifier = modifier.height(56.dp),
+        colors = if (isSelected)
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
+        else
+            ButtonDefaults.buttonColors()
     ) {
         Text(label)
     }
@@ -109,7 +113,7 @@ fun NumberButton(number: Int, onClick: () -> Unit, modifier: Modifier = Modifier
 @Preview(showBackground = true, widthDp = 300)
 @Composable
 fun NumberPadPreview() {
-    var isNoteMode by remember { mutableStateOf(false) }
+    var isNoteMode by remember { mutableStateOf(true) } // metti true per vedere lo stato attivo
     MaterialTheme {
         Box(modifier = Modifier.padding(16.dp)) {
             NumberPad(
