@@ -5,16 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsButton(onClick: () -> Unit = {}) {
-    Button(
-        onClick = onClick
-    ) {
+fun SettingsButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
         Text("Settings")
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SettingsButtonPreview() {
-    SettingsButton(onClick = {})
-}

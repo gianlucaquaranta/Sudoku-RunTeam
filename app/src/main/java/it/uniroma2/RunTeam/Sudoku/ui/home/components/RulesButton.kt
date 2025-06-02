@@ -5,16 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun RulesButton(onClick: () -> Unit = {}) {
-    Button(
-        onClick = onClick
-    ) {
-        Text("Game Rules")
+fun RulesButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("Rules")
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RulesButtonPreview() {
-    RulesButton(onClick = {})
 }

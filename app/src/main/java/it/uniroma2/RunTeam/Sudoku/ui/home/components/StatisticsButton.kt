@@ -5,16 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun StatisticsButton(onClick: () -> Unit = {}) {
-    Button(
-        onClick = onClick
-    ) {
-        Text("Player Statistics")
+fun StatisticsButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("Statistics")
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun StatsButtonPreview() {
-    StatisticsButton(onClick = {})
-}

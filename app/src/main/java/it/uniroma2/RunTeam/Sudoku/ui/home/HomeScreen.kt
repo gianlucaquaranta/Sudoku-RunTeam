@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onPlayClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +42,7 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        PlayButton(onClick = {})
+        PlayButton(onClick = onPlayClick)
         Spacer(modifier = Modifier.height(12.dp))
 
         ResumeButton(onClick = {})
@@ -59,10 +59,4 @@ fun HomeScreen() {
 
         LanguageButton(onClick = {})
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }
