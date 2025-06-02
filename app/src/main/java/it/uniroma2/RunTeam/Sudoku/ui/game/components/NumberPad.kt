@@ -56,7 +56,7 @@ fun NumberPad(
             modifier = Modifier.fillMaxWidth()
         ) {
             NumberKey(label = "Del", onClick = onDeleteClick, modifier = Modifier.weight(1f))
-            NumberKey(label = "Note", onClick = onNoteToggle, modifier = Modifier.weight(1f)) // isSelected rimosso per ora, gestito da GameScreen
+            NumberKey(label = "Note", onClick = onNoteToggle, modifier = Modifier.weight(1f), isSelected = isNoteMode) // isSelected rimosso per ora, gestito da GameScreen
         }
     }
 }
