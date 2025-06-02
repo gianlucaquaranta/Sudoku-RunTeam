@@ -29,7 +29,9 @@ fun createInitialCellGrid(initialPuzzle: List<List<Int?>>): List<List<Cell>> {
                 row = rowIndex,
                 col = colIndex,
                 isStartingCell = isStarting,
-                initialValue = if (isStarting) cellValue else null // Passa il valore iniziale
+                initialValue = if (isStarting) cellValue else null,
+                oldValue = null,
+                newValue = null// Passa il valore iniziale
             )
             // Non c'è più bisogno dell'apply block per impostare il valore iniziale
             // se il costruttore di Cell e la proprietà 'value' sono configurati correttamente.
@@ -74,11 +76,14 @@ fun GameScreen(gameTimerViewModel: GameTimerViewModel = viewModel()) {
 
     LaunchedEffect(Unit) {
         gameTimerViewModel.startTimer()
+        gameTimerViewModel.sudokuGrid = sudokuGrid
     }
 
     Scaffold(
         topBar = { GameTopBar(
-            seconds
+            seconds = seconds,
+            onUndo = { gameTimerViewModel.undo() },
+            onRedo = { gameTimerViewModel.redo() }
         ) }
     ) { paddingValues ->
         Column(
@@ -114,11 +119,10 @@ fun GameScreen(gameTimerViewModel: GameTimerViewModel = viewModel()) {
                             if (isNoteMode) {
                                 cell.toggleNote(number)
                             } else {
-                                // Se il numero cliccato è già nella cella, la cancella, altrimenti la imposta
                                 if (cell.value == number) {
-                                    cell.clearValue()
+                                    gameTimerViewModel.clearCellValue(cell)
                                 } else {
-                                    cell.updateValue(number)
+                                    gameTimerViewModel.updateCellValue(cell, number)
                                 }
                             }
                         }
@@ -128,9 +132,9 @@ fun GameScreen(gameTimerViewModel: GameTimerViewModel = viewModel()) {
                     selectedCell?.let { cell ->
                         if (!cell.isStartingCell) {
                             if (isNoteMode && cell.notes.isNotEmpty()) {
-                                cell.clearNotes() // Cancella tutte le note per semplicità
+                                cell.clearNotes()
                             } else {
-                                cell.clearValue() // Cancella il valore principale
+                                gameTimerViewModel.clearCellValue(cell)
                             }
                         }
                     }

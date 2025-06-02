@@ -12,18 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameTimerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameTopBar(seconds:Int) {
+fun GameTopBar(    seconds: Int,
+                   onUndo: () -> Unit,
+                   onRedo: () -> Unit) {
 
     TopAppBar(
         title = { Text("ICON") },
         actions = {
-            IconButton(onClick = { /* undo */ }) {
+            IconButton(onClick = onUndo) {
                 Icon(Icons.Default.Undo, contentDescription = "Undo")
             }
-            IconButton(onClick = { /* redo */ }) {
+            IconButton(onClick = onRedo) {
                 Icon(Icons.Default.Redo, contentDescription = "Redo")
             }
             IconButton(onClick = { /* restart */ }) {
@@ -55,5 +59,10 @@ fun GameTopBar(seconds:Int) {
 @Preview(showBackground = true)
 @Composable
 fun GameTopBarPreview() {
-    GameTopBar(125)
+    val viewModel: GameTimerViewModel = viewModel()
+    GameTopBar(
+        125,
+        onUndo = { viewModel.undo() },
+        onRedo = { viewModel.redo() }
+    )
 }

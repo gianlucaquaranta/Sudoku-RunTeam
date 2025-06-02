@@ -11,7 +11,9 @@ data class Cell(
     val row: Int,
     val col: Int,
     val isStartingCell: Boolean = false, // Questo è il tuo "isInitial"
-    val initialValue: Int? = null // Questo è il tuo "initialValue"
+    val initialValue: Int? = null, // Questo è il tuo "initialValue"
+    val oldValue: Int?,
+    val newValue: Int?
 ) {
     var value: Int by mutableStateOf(if (isStartingCell) 0 else 0) // Valore iniziale, 0 per vuoto
         private set // Rendiamo il setter privato se vogliamo che sia modificato solo tramite metodi specifici della classe o da GameScreen
