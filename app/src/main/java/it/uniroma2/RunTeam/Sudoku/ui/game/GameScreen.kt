@@ -41,7 +41,8 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             GameTopBar(
                 seconds = state.secondsElapsed,
                 onUndo = { gameViewModel.undo() },
-                onRedo = { gameViewModel.redo() }
+                onRedo = { gameViewModel.redo() },
+                onRestart = { gameViewModel.restartGame() }
             )
         }
     ) { paddingValues ->

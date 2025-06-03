@@ -19,7 +19,8 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
 @Composable
 fun GameTopBar(    seconds: Int,
                    onUndo: () -> Unit,
-                   onRedo: () -> Unit) {
+                   onRedo: () -> Unit,
+                   onRestart: () -> Unit) {
 
     TopAppBar(
         title = { Text("ICON") },
@@ -30,7 +31,7 @@ fun GameTopBar(    seconds: Int,
             IconButton(onClick = onRedo) {
                 Icon(Icons.Default.Redo, contentDescription = "Redo")
             }
-            IconButton(onClick = { /* restart */ }) {
+            IconButton(onClick = onRestart) {
                 Icon(Icons.Default.Refresh, contentDescription = "Restart")
             }
             IconButton(onClick = { /* theme */ }) {
@@ -63,6 +64,7 @@ fun GameTopBarPreview() {
     GameTopBar(
         125,
         onUndo = { viewModel.undo() },
-        onRedo = { viewModel.redo() }
+        onRedo = { viewModel.redo() },
+        onRestart = { viewModel.restartGame() }
     )
 }

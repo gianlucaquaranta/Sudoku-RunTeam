@@ -2,6 +2,8 @@ package it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.animation.core.copy
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -110,5 +112,53 @@ class GameViewModel : ViewModel() {
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
         }
     }
+
+    fun restartGame() {
+        val currentSudokuGrid = _uiState.value.sudokuGrid
+        if (currentSudokuGrid == null) {
+            Log.w("GameViewModel", "SudokuGrid is null, cannot restart. Potrebbe essere necessario creare una nuova griglia.")
+            // Potresti voler richiamare createGrid qui se non c'è una griglia,
+            // oppure semplicemente non fare nulla se non c'è una partita da riavviare.
+            return
+        }
+
+        // Crea una nuova griglia basata su quella corrente,
+        // resettando le celle modificabili al loro stato 'initialValue' (se presente) o a 0.
+        val newBoardCells = Array(currentSudokuGrid.grid.size) { r ->
+            Array(currentSudokuGrid.grid[r].size) { c ->
+                val currentCell = currentSudokuGrid.grid[r][c]
+                if (!currentCell.isStartingCell) {
+                    // Se la cella non è una cella iniziale, resettala.
+                    // Resetta al valore iniziale se lo hai, altrimenti a 0.
+                    // Assumiamo che initialValue sia 0 per le celle vuote all'inizio
+                    // o che `value` di una startingCell sia il suo valore fisso.
+                    currentCell.copy()
+                    currentCell.value = 0
+                    currentCell.clearNotes()
+                    currentCell
+                } else {
+                    // Le celle iniziali rimangono invariate.
+                    // È importante restituire una copia se SudokuGrid o Cell sono data class
+                    // per garantire che i cambiamenti vengano rilevati se si aggiorna l'intera struttura.
+                    currentCell.copy() // O semplicemente currentCell se non è necessario creare copie per le starting cells
+                }
+            }
+        }
+
+        // Aggiorna lo stato della UI con la nuova griglia resettata
+        _uiState.update {
+            it.copy(
+                sudokuGrid = currentSudokuGrid.copy(grid = newBoardCells),
+                selectedCell = null, // Deseleziona qualsiasi cella
+                isNoteMode = false // Eventualmente resetta la modalità note
+            )
+        }
+        // Pulisci gli stack di undo e redo
+        undoStack.clear()
+        redoStack.clear()
+
+        Log.d("GameViewModel", "Game restarted.")
+    }
+
 
 }
