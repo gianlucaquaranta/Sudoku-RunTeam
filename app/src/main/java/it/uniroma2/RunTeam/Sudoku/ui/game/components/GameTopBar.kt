@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameTimerViewModel
+import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +59,7 @@ fun GameTopBar(    seconds: Int,
 @Preview(showBackground = true)
 @Composable
 fun GameTopBarPreview() {
-    val viewModel: GameTimerViewModel = viewModel()
+    val viewModel: GameViewModel = viewModel()
     GameTopBar(
         125,
         onUndo = { viewModel.undo() },

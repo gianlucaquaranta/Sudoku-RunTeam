@@ -23,7 +23,7 @@ import it.uniroma2.RunTeam.Sudoku.model.Cell
 
 @Composable
 fun SudokuGrid(
-    gridCells: List<List<Cell>>,
+    gridCells: Array<Array<Cell>>,
     currentlySelectedCell: Cell?, // La cella attualmente selezionata, gestita da GameScreen
     onCellClick: (cell: Cell) -> Unit,
     modifier: Modifier = Modifier
@@ -120,7 +120,7 @@ fun SudokuCellDisplay(
                     if (cell.notes.contains(noteNumber)) {
                         Text(
                             text = noteNumber.toString(),
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp), // Molto piccolo
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), // Molto piccolo
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

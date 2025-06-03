@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import it.uniroma2.RunTeam.Sudoku.ui.game.GameScreen
 import it.uniroma2.RunTeam.Sudoku.ui.home.HomeScreen
+import it.uniroma2.RunTeam.Sudoku.ui.game.GameScreen
 
 @Composable
 fun SudokuNavHost(navController: NavHostController) {

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
-import it.uniroma2.RunTeam.Sudoku.ui.game.GameScreen
 import it.uniroma2.RunTeam.Sudoku.ui.navigation.SudokuNavHost
 
 class MainActivity : ComponentActivity() {
