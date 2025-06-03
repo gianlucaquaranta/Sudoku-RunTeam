@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,16 +57,33 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            state.sudokuGrid?.let {
-                SudokuGrid(
-                    gridCells = it.grid,
-                    currentlySelectedCell = state.selectedCell,
-                    onCellClick = { gameViewModel.onCellSelected(it) },
+            if (state.isLoading) {
+                // Mostra un indicatore di caricamento o un testo
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f, fill = false)
-                        .aspectRatio(1f)
-                )
+                        .aspectRatio(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Puoi usare CircularProgressIndicator o un Text
+                    CircularProgressIndicator()
+                    // Oppure:
+                    // Text("Caricamento griglia...")
+                }
+            } else {
+                // Mostra la SudokuGrid quando non sta caricando
+                state.sudokuGrid?.let {
+                    SudokuGrid(
+                        gridCells = it.grid,
+                        currentlySelectedCell = state.selectedCell,
+                        onCellClick = { gameViewModel.onCellSelected(it) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = false)
+                            .aspectRatio(1f)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

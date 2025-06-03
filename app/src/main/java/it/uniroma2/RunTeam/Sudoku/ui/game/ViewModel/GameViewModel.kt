@@ -55,6 +55,7 @@ class GameViewModel : ViewModel() {
             onSuccess = { (puzzle, solution) ->
                 _uiState.value.sudokuGrid = puzzle
                 solutionGrid = solution
+                _uiState.value.isLoading = false
             },
             onError = { errorMessage ->
                 Log.e("GameViewModel", "Errore durante il fetch del sudoku: $errorMessage")
