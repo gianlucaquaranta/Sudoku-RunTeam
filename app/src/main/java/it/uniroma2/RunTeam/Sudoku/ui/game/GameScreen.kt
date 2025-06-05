@@ -96,7 +96,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                         if (state.isNoteMode) {
                             cell.toggleNote(number)
                         } else {
-                            if (cell.value == number) {
+                            if (cell.value == number && !cell.isValid) {
                                 gameViewModel.clearCellValue(cell)
                             } else {
                                 gameViewModel.updateCellValue(cell, number)

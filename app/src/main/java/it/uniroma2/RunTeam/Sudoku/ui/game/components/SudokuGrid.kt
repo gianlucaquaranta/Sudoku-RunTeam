@@ -46,16 +46,14 @@ fun SudokuGrid(
                 ) {
                     row.forEachIndexed { colIndex, cell ->
                         val isThisCellSelected = currentlySelectedCell == cell
-
                         // Determina il colore di sfondo
                         val backgroundColor = when {
-                            isThisCellSelected -> MaterialTheme.colorScheme.inversePrimary // Evidenzia la selezione
-                            cell.isIncorrect -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f) // Evidenzia errore
+                            isThisCellSelected && !cell.isIncorrect-> MaterialTheme.colorScheme.inversePrimary //Evidenzia la selezione
+                            cell.isIncorrect -> Color.Red // Evidenzia errore
                             // Alternating background per i blocchi 3x3, più sottile
                             (rowIndex / 3 + colIndex / 3) % 2 == 0 -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                             else -> MaterialTheme.colorScheme.surface
                         }
-
                         SudokuCellDisplay( // Rinominato per chiarezza
                             cell = cell,
                             isSelected = isThisCellSelected, // Passa lo stato di selezione calcolato
@@ -102,7 +100,7 @@ fun SudokuCellDisplay(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .background(backgroundColor)
-            .clickable(enabled = !cell.isStartingCell) { onClick() }
+            .clickable(enabled = !(cell.isStartingCell||cell.isValid)) { onClick() }
             .padding(1.dp)
     ) {
         // Se ci sono note e nessun valore principale, mostra le note

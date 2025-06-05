@@ -63,6 +63,12 @@ class GameViewModel : ViewModel() {
         )
     }
 
+    private fun checkCell(row: Int, col: Int, value: Int): Boolean {
+        val currentValue = _uiState.value.sudokuGrid?.getCell(row, col)?.value
+        val rightValue = solutionGrid?.getCell(row, col)?.value
+        return currentValue == rightValue
+    }
+
     fun onCellSelected(cell: Cell) {
         if (!cell.isStartingCell) {
             _uiState.update {
@@ -78,10 +84,16 @@ class GameViewModel : ViewModel() {
 
     fun updateCellValue(cell: Cell, newValue: Int) {
         val oldValue = cell.value
-        if (oldValue != newValue) {
+        if (oldValue != newValue && !cell.isValid) { //una cella valida non deve poter essere modificabile
             undoStack.add(Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, newValue))
             redoStack.clear()
             cell.updateValue(newValue)
+            if(!checkCell(cell.row,cell.col,newValue)){
+                cell.markIncorrect()
+            } else {
+                cell.validate()
+            }
+
         }
     }
 
@@ -99,6 +111,7 @@ class GameViewModel : ViewModel() {
             val change = undoStack.removeAt(undoStack.lastIndex) // Modifica qui
             val cell = _uiState.value.sudokuGrid?.getCell(change.row, change.col)
             redoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
+            cell?.unvalidate() //Per far sì che si possa rendere ricliccabile e rimodificabile una cella che era valida prima dell'undo
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
         }
     }
@@ -111,6 +124,9 @@ class GameViewModel : ViewModel() {
             undoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             // Assicurati che change.newValue non sia nullo.
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
+            if(cell != null && checkCell(change.row, change.col, cell.value)) {
+                cell.validate()
+            }
         }
     }
 
@@ -134,7 +150,7 @@ class GameViewModel : ViewModel() {
                     // Assumiamo che initialValue sia 0 per le celle vuote all'inizio
                     // o che `value` di una startingCell sia il suo valore fisso.
                     currentCell.copy()
-                    currentCell.value = 0
+                    currentCell.updateValue(0)
                     currentCell.clearNotes()
                     currentCell
                 } else {

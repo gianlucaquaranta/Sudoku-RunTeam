@@ -10,17 +10,20 @@ import androidx.compose.runtime.setValue
 data class Cell(
     val row: Int,
     val col: Int,
-    val isStartingCell: Boolean = false, // Questo è il tuo "isInitial"
+    var isStartingCell: Boolean = false, // Questo è il tuo "isInitial"
     val initialValue: Int? = null, // Questo è il tuo "initialValue"
     val oldValue: Int?,
     val newValue: Int?
 ) {
     var value: Int by mutableStateOf(initialValue ?: 0) // Valore iniziale, 0 per vuoto
-        set // Rendiamo il setter privato se vogliamo che sia modificato solo tramite metodi specifici della classe o da GameScreen
+        private set // Rendiamo il setter privato se vogliamo che sia modificato solo tramite metodi specifici della classe o da GameScreen
 
     var isSelected: Boolean by mutableStateOf(false) // Useremo uno stato separato in GameScreen per la cella attiva
     // ma questo può essere usato per altri scopi di UI
     var isIncorrect: Boolean by mutableStateOf(false)
+        private set
+    var isValid: Boolean by mutableStateOf(false)
+        private set
     var notes: Set<Int> by mutableStateOf(emptySet())
 
 
@@ -57,6 +60,22 @@ data class Cell(
         if (!isStartingCell) {
             notes = emptySet()
         }
+    }
+
+    fun markIncorrect(){
+        isIncorrect = true
+    }
+
+    fun cleanIncorrect(){
+        isIncorrect = false
+    }
+
+    fun validate(){
+        isValid = true
+    }
+
+    fun unvalidate(){
+        isValid = false
     }
 
     // Proprietà calcolata per la UI
