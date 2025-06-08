@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.navigation
+package it.uniroma2.RunTeam.Sudoku.navigation
 
 object NavRoutes {
     const val HOME = "home"

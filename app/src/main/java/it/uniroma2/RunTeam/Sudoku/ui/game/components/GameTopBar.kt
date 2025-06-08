@@ -20,10 +20,11 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
 fun GameTopBar(    seconds: Int,
                    onUndo: () -> Unit,
                    onRedo: () -> Unit,
-                   onRestart: () -> Unit) {
+                   onRestart: () -> Unit,
+                   onSaveExit: ()->Unit) {
 
     TopAppBar(
-        title = { Text("ICON") },
+        title = { },
         actions = {
             IconButton(onClick = onUndo) {
                 Icon(Icons.Default.Undo, contentDescription = "Undo")
@@ -37,7 +38,7 @@ fun GameTopBar(    seconds: Int,
             IconButton(onClick = { /* theme */ }) {
                 Icon(Icons.Default.DarkMode, contentDescription = "Change Theme")
             }
-            IconButton(onClick = { /* exit with save */ }) {
+            IconButton(onClick = onSaveExit) {
                 Icon(Icons.Default.ExitToApp, contentDescription = "Exit")
             }
         },
@@ -54,17 +55,5 @@ fun GameTopBar(    seconds: Int,
                 GameTimer(seconds = seconds)
             }
         }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GameTopBarPreview() {
-    val viewModel: GameViewModel = viewModel()
-    GameTopBar(
-        125,
-        onUndo = { viewModel.undo() },
-        onRedo = { viewModel.redo() },
-        onRestart = { viewModel.restartGame() }
     )
 }

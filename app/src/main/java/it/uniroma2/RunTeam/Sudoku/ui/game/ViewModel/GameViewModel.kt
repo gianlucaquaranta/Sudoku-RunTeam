@@ -28,6 +28,9 @@ class GameViewModel : ViewModel() {
     private var timerJob: Job? = null
     private var solutionGrid: SudokuGrid? = null
 
+    private val _shouldNavigateHome = MutableStateFlow(false)
+    val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome
+
     fun startTimer() {
         if (timerJob == null) {
             timerJob = viewModelScope.launch {
@@ -177,5 +180,13 @@ class GameViewModel : ViewModel() {
         Log.d("GameViewModel", "Game restarted.")
     }
 
+    fun onSaveExit(){
+        //Andrea poi qua aggiungi quello che ti serve per salvare la partita che si sta giocando
+        _shouldNavigateHome.value = true
+    }
+
+    fun resetNavigateHomeFlag() {
+        _shouldNavigateHome.value = false
+    }
 
 }

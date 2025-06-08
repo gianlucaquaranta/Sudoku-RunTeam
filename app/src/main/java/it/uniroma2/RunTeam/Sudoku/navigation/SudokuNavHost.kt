@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.navigation
+package it.uniroma2.RunTeam.Sudoku.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -20,7 +20,7 @@ fun SudokuNavHost(navController: NavHostController) {
         }
 
         composable(NavRoutes.GAME) {
-            GameScreen()
+            GameScreen(navController = navController)
         }
     }
 }

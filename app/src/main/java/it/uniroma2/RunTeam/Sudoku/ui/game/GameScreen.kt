@@ -27,11 +27,14 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.NumberPad
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 
 @Composable
-fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
+fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
     val state by gameViewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
 
     LaunchedEffect(Unit) {
         val difficulty: Difficulty = Difficulty.EASY
@@ -39,13 +42,20 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
         gameViewModel.startTimer()
     }
 
+    LaunchedEffect(navigateHome) {
+        if (navigateHome) {
+            navController.popBackStack()
+            gameViewModel.resetNavigateHomeFlag()//questo popBackStack serve per non creare un'ulteriore pagina home
+        }
+    }
     Scaffold(
         topBar = {
             GameTopBar(
                 seconds = state.secondsElapsed,
                 onUndo = { gameViewModel.undo() },
                 onRedo = { gameViewModel.redo() },
-                onRestart = { gameViewModel.restartGame() }
+                onRestart = { gameViewModel.restartGame()},
+                onSaveExit={gameViewModel.onSaveExit()},
             )
         }
     ) { paddingValues ->
