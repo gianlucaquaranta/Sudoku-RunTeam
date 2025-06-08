@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +37,7 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
     val state by gameViewModel.uiState.collectAsState()
     val context = LocalContext.current
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
+    val gameState by gameViewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         val difficulty: Difficulty = Difficulty.EASY
@@ -130,5 +133,19 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
 
             SuggestionButton()
         }
+    }
+    if (gameState.isGameCompleted) {
+        AlertDialog(
+            onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
+            title = { Text("Complimenti!") },
+            text = { Text("Hai completato il Sudoku!") },
+            confirmButton = {
+                Button(onClick = {
+                    gameViewModel.createGrid(context,Difficulty.EASY)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                }) {
+                    Text("Nuova Partita")
+                }
+            }
+        )
     }
 }

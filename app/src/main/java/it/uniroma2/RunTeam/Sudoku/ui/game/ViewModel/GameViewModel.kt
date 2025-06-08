@@ -53,12 +53,23 @@ class GameViewModel : ViewModel() {
     }
 
     fun createGrid(context: Context, difficulty: Difficulty) {
+        _uiState.update { it.copy(isLoading = true) }
         SudokuGenerator(context).generateSudoku(
             difficulty = difficulty,
             onSuccess = { (puzzle, solution) ->
-                _uiState.value.sudokuGrid = puzzle
                 solutionGrid = solution
-                _uiState.value.isLoading = false
+                _uiState.update {
+                    it.copy(
+                        sudokuGrid = puzzle,
+                        isLoading = false,
+                        selectedCell = null,
+                        isNoteMode = false,
+                        isGameCompleted = false,
+                        secondsElapsed = 0
+                    )
+                }
+                undoStack.clear()// ho fatto re di set undo/redo
+                redoStack.clear()
             },
             onError = { errorMessage ->
                 Log.e("GameViewModel", "Errore durante il fetch del sudoku: $errorMessage")
@@ -96,7 +107,12 @@ class GameViewModel : ViewModel() {
             } else {
                 cell.validate()
             }
-
+        }
+        if(!checkCell(cell.row,cell.col,newValue)){
+            cell.markIncorrect()
+        } else {
+            cell.validate()
+            checkGameCompletion() // Aggiungi questo solo se è corretto
         }
     }
 
@@ -189,4 +205,21 @@ class GameViewModel : ViewModel() {
         _shouldNavigateHome.value = false
     }
 
+    private fun checkGameCompletion() {
+        val grid = _uiState.value.sudokuGrid ?: return
+
+        for (row in 0 until grid.grid.size) {
+            for (col in 0 until grid.grid[row].size) {
+                val cell = grid.getCell(row, col)
+                if (cell != null) {
+                    if (cell.value == 0 || !checkCell(row, col, cell.value)) {
+                        return // Qualcosa è sbagliato o incompleto
+                    }
+                }
+            }
+        }
+
+        // Tutte le celle sono piene e corrette
+        _uiState.update { it.copy(isGameCompleted = true) }
+    }
 }

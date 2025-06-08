@@ -8,5 +8,6 @@ data class GameState(
     var sudokuGrid: SudokuGrid ?= null,
     var selectedCell: Cell ?= null,
     var isNoteMode: Boolean = false,
-    var secondsElapsed: Int = 0
+    var secondsElapsed: Int = 0,
+    val isGameCompleted: Boolean = false
 )
