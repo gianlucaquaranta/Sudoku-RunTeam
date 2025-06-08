@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.0"
+konfettiCompose = "2.0.5"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -33,6 +34,8 @@ androidx-material-icons-extended = { group = "androidx.compose.material", name =
 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+konfetti-compose = { module = "nl.dionsegijn:konfetti-compose", version.ref = "konfettiCompose" }
+konfetti-core = { module = "nl.dionsegijn:konfetti-core", version.ref = "konfettiCompose" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 [plugins]

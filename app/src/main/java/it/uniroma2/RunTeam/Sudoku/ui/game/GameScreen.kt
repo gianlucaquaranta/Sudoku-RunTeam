@@ -31,6 +31,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
 
 @Composable
 fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
@@ -147,5 +148,6 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
                 }
             }
         )
+        CelebrationConfetti(show = true)
     }
 }
