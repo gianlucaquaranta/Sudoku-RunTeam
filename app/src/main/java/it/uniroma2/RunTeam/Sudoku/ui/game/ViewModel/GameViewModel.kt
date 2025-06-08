@@ -68,7 +68,7 @@ class GameViewModel : ViewModel() {
                         secondsElapsed = 0
                     )
                 }
-                undoStack.clear()// ho fatto re di set undo/redo
+                undoStack.clear()// ho fatto reset di undo/redo
                 redoStack.clear()
             },
             onError = { errorMessage ->
