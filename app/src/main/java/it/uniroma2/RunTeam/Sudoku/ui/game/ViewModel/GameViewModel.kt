@@ -112,9 +112,9 @@ class GameViewModel : ViewModel() {
             cell.markIncorrect()
         } else {
             cell.validate()
-            checkGameCompletion() // Aggiungi questo solo se è corretto
-        }
-    }
+            checkGameCompletion() // Aggiungi questo solo se è corretto,qui potremmo fare anche la logica degli errori
+        }                         //con un contatore ,oppure nell'if facciamo il contatore e se perde si crea un'altra fun
+    }                             //che gli esce un pop up che dice che ha perso
 
     fun clearCellValue(cell: Cell) {
         val oldValue = cell.value
