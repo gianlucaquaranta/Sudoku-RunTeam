@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.theme
+package it.uniroma2.RunTeam.Sudoku.ui.home.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
