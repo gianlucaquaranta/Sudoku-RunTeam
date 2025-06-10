@@ -8,6 +8,6 @@ import androidx.navigation.NavController
 @Composable
 fun StatisticsButton(onClick: () -> Unit) {
     Button(onClick = onClick) {
-        Text("stats")
+        Text("Statistics")
     }
 }
