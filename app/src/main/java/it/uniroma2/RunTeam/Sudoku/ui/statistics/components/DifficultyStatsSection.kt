@@ -3,7 +3,7 @@ package it.uniroma2.RunTeam.Sudoku.ui.statistics.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import  androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +24,7 @@ fun DifficultyStatsSection() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        StatCard(label = "Partite giocate", value = "-")
+        StatCard(label = "Mealcalendar", value = "-")
         StatCard(label = "Partite vinte", value = "-")
         StatCard(label = "Miglior tempo", value = "-")
         StatCard(label = "Tempo medio", value = "-")

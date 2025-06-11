@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.accompanist.navigation.animation)
     implementation (libs.konfetti.compose)
     implementation(libs.konfetti.core)
     implementation(libs.androidx.core.ktx)
