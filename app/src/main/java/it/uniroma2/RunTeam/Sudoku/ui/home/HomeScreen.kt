@@ -1,11 +1,11 @@
 package it.uniroma2.RunTeam.Sudoku.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import it.uniroma2.RunTeam.Sudoku.ui.home.components.PlayButton
 import it.uniroma2.RunTeam.Sudoku.ui.home.components.ResumeButton
-import it.uniroma2.RunTeam.Sudoku.ui.home.components.StatisticsButton
-import it.uniroma2.RunTeam.Sudoku.ui.home.components.SettingsButton
-import it.uniroma2.RunTeam.Sudoku.ui.home.components.RulesButton
-import it.uniroma2.RunTeam.Sudoku.ui.home.components.LanguageButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,47 +16,133 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
-
+import it.uniroma2.RunTeam.Sudoku.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import it.uniroma2.RunTeam.Sudoku.ui.home.components.HomeNav
 
 
 @Composable
-fun HomeScreen(onPlayClick: () -> Unit,onStatisticsClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
+fun HomeScreen(
+    onPlayClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    var showRulesDialog by remember { mutableStateOf(false) }
 
-        Text(
-            text = "SUDOKU GAME",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.headlineLarge
-        )
+    // Floating button animazioni
+    val rotation by animateFloatAsState(
+        targetValue = if (showRulesDialog) 360f else 0f,
+        label = "rotation"
+    )
+    val scale by animateFloatAsState(
+        targetValue = if (showRulesDialog) 1.2f else 1f,
+        label = "scale"
+    )
 
-        Spacer(modifier = Modifier.height(48.dp))
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "SUDOKU GAME",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineLarge
+            )
 
-        PlayButton(onClick = onPlayClick)
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
-        ResumeButton(onClick = {})
-        Spacer(modifier = Modifier.height(12.dp))
+            PlayButton(
+                onClick = onPlayClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            )
 
-        StatisticsButton(onClick = onStatisticsClick)
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        SettingsButton(onClick = {})
-        Spacer(modifier = Modifier.height(12.dp))
+            ResumeButton(
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+            )
+        }
 
-        RulesButton(onClick = {})
-        Spacer(modifier = Modifier.height(12.dp))
+        FloatingActionButton(
+            onClick = { showRulesDialog = !showRulesDialog },
+            containerColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    rotationZ = rotation
+                }
+        ) {
+            Icon(Icons.Default.Info, contentDescription = "Rules")
+        }
 
-        LanguageButton(onClick = {})
+        if (showRulesDialog) {
+            AnimatedVisibility(
+                visible = showRulesDialog,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                AlertDialog(
+                    onDismissRequest = { showRulesDialog = false },
+                    confirmButton = {},
+                    dismissButton = {},
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = context.getString(R.string.sudoku_title),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            IconButton(onClick = { showRulesDialog = false }) {
+                                Icon(Icons.Default.Close, contentDescription = "Close")
+                            }
+                        }
+                    },
+                    text = {
+                        Text(
+                            text = context.getString(R.string.sudoku_rules),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    },
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
+        }
     }
 }
+
+
+

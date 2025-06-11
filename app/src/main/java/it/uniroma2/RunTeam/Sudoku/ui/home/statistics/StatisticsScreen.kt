@@ -27,7 +27,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyTabs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsScreen(navController: NavController) {
+fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val difficulties = listOf("Easy", "Medium", "Hard")
 
