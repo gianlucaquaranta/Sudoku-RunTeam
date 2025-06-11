@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import it.uniroma2.RunTeam.Sudoku.navigation.SudokuNavHost
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

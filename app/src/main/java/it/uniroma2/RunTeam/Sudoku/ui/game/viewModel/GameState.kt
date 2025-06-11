@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel
+package it.uniroma2.RunTeam.Sudoku.ui.game.viewModel
 
 import it.uniroma2.RunTeam.Sudoku.model.Cell
 import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
@@ -9,5 +9,5 @@ data class GameState(
     var selectedCell: Cell ?= null,
     var isNoteMode: Boolean = false,
     var secondsElapsed: Int = 0,
-    val isGameCompleted: Boolean = false
+    val isGameCompleted: Boolean = false,
 )

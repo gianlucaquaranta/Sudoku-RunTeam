@@ -1,5 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,21 +25,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.NumberPad
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 
 @Composable
-fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
-    val state by gameViewModel.uiState.collectAsState()
+fun GameScreen(navController: NavHostController) {
+
     val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val gameViewModel: GameViewModel = viewModel(
+        factory = GameViewModelFactory(application)
+    )
+
+    val state by gameViewModel.uiState.collectAsState()
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
     val gameState by gameViewModel.uiState.collectAsState()
+
 
     LaunchedEffect(Unit) {
         val difficulty: Difficulty = Difficulty.EASY

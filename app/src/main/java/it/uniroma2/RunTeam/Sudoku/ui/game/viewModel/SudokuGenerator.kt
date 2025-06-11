@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel
+package it.uniroma2.RunTeam.Sudoku.ui.game.viewModel
 
 import android.content.Context
 import android.util.Log
