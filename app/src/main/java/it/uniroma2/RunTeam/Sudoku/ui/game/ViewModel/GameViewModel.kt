@@ -2,8 +2,6 @@ package it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.animation.core.copy
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GameViewModel : ViewModel() {
+
     private val _uiState = MutableStateFlow(GameState()) //attributo privato per mantenere lo stato di gioco, modificabile perché Mutable ma solo da viewmodel
     val uiState: StateFlow<GameState> = _uiState.asStateFlow() //Pubblico ma read-only, serve alla UI per leggere lo stato del gioco
 
@@ -26,7 +25,9 @@ class GameViewModel : ViewModel() {
     private val redoStack = mutableStateListOf<Cell>()
 
     private var timerJob: Job? = null
+    private var initialGrid: SudokuGrid? = null
     private var solutionGrid: SudokuGrid? = null
+    private var maxErrors: Int = 0
 
     private val _shouldNavigateHome = MutableStateFlow(false)
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome
@@ -56,28 +57,62 @@ class GameViewModel : ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
         SudokuGenerator(context).generateSudoku(
             difficulty = difficulty,
-            onSuccess = { (puzzle, solution) ->
-                solutionGrid = solution
-                _uiState.update {
-                    it.copy(
-                        sudokuGrid = puzzle,
-                        isLoading = false,
-                        selectedCell = null,
-                        isNoteMode = false,
-                        isGameCompleted = false,
-                        secondsElapsed = 0
-                    )
-                }
-                undoStack.clear()// ho fatto reset di undo/redo
-                redoStack.clear()
-            },
+            onSuccess = { (puzzle, solution) -> initializeGame(puzzle, solution) },
             onError = { errorMessage ->
                 Log.e("GameViewModel", "Errore durante il fetch del sudoku: $errorMessage")
             }
         )
     }
 
-    private fun checkCell(row: Int, col: Int, value: Int): Boolean {
+    private fun initializeGame(puzzle: SudokuGrid, solution: SudokuGrid){
+        solutionGrid = solution
+
+        val newGrid: Array<IntArray> = Array(9) { row ->
+            IntArray(9) { col ->
+                puzzle.getCell(row,col)?.value ?: 0
+            }
+        }
+
+        val puzzleCopy: SudokuGrid = SudokuGrid.fromValues(newGrid, puzzle.difficulty) //per non far condividere il riferimento alla stessa istanza sia a initialGrid che a al sudoku in _uiState
+
+        initialGrid = puzzle
+
+        when(solutionGrid?.difficulty){
+            Difficulty.EASY -> {
+                maxErrors = 5
+                _uiState.update { it.copy(remainingHints = 5) }
+            }
+            Difficulty.MEDIUM -> {
+                maxErrors = 3
+                _uiState.update { it.copy(remainingHints = 3) }
+            }
+            Difficulty.DIFFICULT -> {
+                maxErrors = 2
+                _uiState.update { it.copy(remainingHints = 2) }
+            }
+            null -> Log.e("GameViewModel", "Difficulty null")
+        }
+        /*si riportano ai valori iniziali tutti i valori dello stato di gioco, poiché
+        si potrebbe passare da questo metodo sia all'inizio di una partita, sia quando l'utente
+        conclude una partita e seleziona "Nuova partita", dunque è necessario resettare lo stato
+         */
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                sudokuGrid = puzzleCopy,
+                selectedCell = null,
+                errors = 0,
+                isNoteMode = false,
+                secondsElapsed = 0,
+                isGameCompleted = false,
+                isGameLost = false
+            )
+        }
+        undoStack.clear()// ho fatto reset di undo/redo
+        redoStack.clear()
+    }
+
+    private fun checkCell(row: Int, col: Int): Boolean {
         val currentValue = _uiState.value.sudokuGrid?.getCell(row, col)?.value
         val rightValue = solutionGrid?.getCell(row, col)?.value
         return currentValue == rightValue
@@ -93,7 +128,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun toggleNoteMode() {
-        _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
+        if(!_uiState.value.selectedCell?.isValid!!) _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
     }
 
     fun updateCellValue(cell: Cell, newValue: Int) {
@@ -102,27 +137,41 @@ class GameViewModel : ViewModel() {
             undoStack.add(Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, newValue))
             redoStack.clear()
             cell.updateValue(newValue)
-            if(!checkCell(cell.row,cell.col,newValue)){
+            if(!checkCell(cell.row,cell.col)){
                 cell.markIncorrect()
+                _uiState.value.errors ++
+                if(_uiState.value.errors == maxErrors){
+                    _uiState.update { it.copy(isGameLost = true) }
+                }
             } else {
                 cell.validate()
+                checkGameCompletion()
             }
         }
-        if(!checkCell(cell.row,cell.col,newValue)){
+        /*
+        if(!checkCell(cell.row,cell.col)){
             cell.markIncorrect()
         } else {
             cell.validate()
             checkGameCompletion() // Aggiungi questo solo se è corretto,qui potremmo fare anche la logica degli errori
-        }                         //con un contatore ,oppure nell'if facciamo il contatore e se perde si crea un'altra fun
+        }
+                           //con un contatore ,oppure nell'if facciamo il contatore e se perde si crea un'altra fun
+         */
     }                             //che gli esce un pop up che dice che ha perso
 
     fun clearCellValue(cell: Cell) {
-        val oldValue = cell.value
-        if (oldValue != 0) {
-            undoStack.add(Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, 0))
-            redoStack.clear()
-            cell.clearValue()
+        if(!_uiState.value.selectedCell?.isValid!!) {
+            val oldValue = cell.value
+            if (oldValue != 0) {
+                undoStack.add(
+                    Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, 0)
+                )
+                redoStack.clear()
+                cell.clearValue()
+            }
         }
+
+
     }
 
     fun undo() {
@@ -143,13 +192,17 @@ class GameViewModel : ViewModel() {
             undoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             // Assicurati che change.newValue non sia nullo.
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
-            if(cell != null && checkCell(change.row, change.col, cell.value)) {
+            if(cell != null && checkCell(change.row, change.col)) {
                 cell.validate()
             }
         }
     }
 
     fun restartGame() {
+        initializeGame(initialGrid!!, solutionGrid!!)
+    }
+
+    fun oldRestartGame() {
         val currentSudokuGrid = _uiState.value.sudokuGrid
         if (currentSudokuGrid == null) {
             Log.w("GameViewModel", "SudokuGrid is null, cannot restart. Potrebbe essere necessario creare una nuova griglia.")
@@ -212,7 +265,7 @@ class GameViewModel : ViewModel() {
             for (col in 0 until grid.grid[row].size) {
                 val cell = grid.getCell(row, col)
                 if (cell != null) {
-                    if (cell.value == 0 || !checkCell(row, col, cell.value)) {
+                    if (cell.value == 0 || !checkCell(row, col)) {
                         return // Qualcosa è sbagliato o incompleto
                     }
                 }
@@ -222,4 +275,5 @@ class GameViewModel : ViewModel() {
         // Tutte le celle sono piene e corrette
         _uiState.update { it.copy(isGameCompleted = true) }
     }
+
 }

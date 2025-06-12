@@ -7,7 +7,10 @@ data class GameState(
     var isLoading: Boolean = true,
     var sudokuGrid: SudokuGrid ?= null,
     var selectedCell: Cell ?= null,
+    var errors: Int = 0,
+    var remainingHints: Int = 0,
     var isNoteMode: Boolean = false,
     var secondsElapsed: Int = 0,
-    val isGameCompleted: Boolean = false
+    val isGameCompleted: Boolean = false,
+    val isGameLost: Boolean = false
 )

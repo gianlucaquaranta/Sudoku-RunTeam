@@ -120,7 +120,7 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
                 },
                 onDeleteClick = {
                     state.selectedCell?.let { cell ->
-                        if (state.isNoteMode && cell.notes.isNotEmpty()) {
+                        if (cell.notes.isNotEmpty()) {
                             cell.clearNotes()
                         } else {
                             gameViewModel.clearCellValue(cell)
@@ -149,5 +149,28 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
             }
         )
         CelebrationConfetti(show = true)
+    }
+
+    if (gameState.isGameLost) {
+        AlertDialog(
+            onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
+            title = { Text("Hai perso!") },
+            text = {
+                val maxErrors = state.errors;
+                Text("Hai commesso $maxErrors errori su $maxErrors")
+            },
+            confirmButton = {
+                Button(onClick = {
+                    gameViewModel.restartGame()// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                }) {
+                    Text("Ricomincia")
+                }
+                Button(onClick = {
+                    gameViewModel.createGrid(context,Difficulty.EASY)
+                }) {
+                    Text("Nuova Partita")
+                }
+            }
+        )
     }
 }
