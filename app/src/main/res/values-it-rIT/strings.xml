@@ -17,4 +17,6 @@
     <string name="sudoku_title">Regole Sudoku</string>
     <string name="italian">Italiano</string>
     <string name="english">Inglese</string>
+    <string name="sel_language">Seleziona Lingua</string>
+    <string name="sel_stats">Le Tue Statistiche</string>
 </resources>

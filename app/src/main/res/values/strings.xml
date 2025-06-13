@@ -17,4 +17,6 @@
     <string name="sudoku_title">Sudoku Rules</string>
     <string name="italian">Italian</string>
     <string name="english">English</string>
+    <string name="sel_language">Select Language</string>
+    <string name="sel_stats">Your Statistics</string>
 </resources>

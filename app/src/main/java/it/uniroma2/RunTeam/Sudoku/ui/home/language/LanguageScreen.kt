@@ -41,7 +41,7 @@ fun LanguageScreen(navController: NavController,modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.language)) },
+                title = { Text(context.getString(R.string.sel_language)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")

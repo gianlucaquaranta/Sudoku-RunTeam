@@ -24,7 +24,7 @@ fun DifficultyStatsSection() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        StatCard(label = "Mealcalendar", value = "-")
+        StatCard(label = "Partite giocate", value = "-")
         StatCard(label = "Partite vinte", value = "-")
         StatCard(label = "Miglior tempo", value = "-")
         StatCard(label = "Tempo medio", value = "-")
