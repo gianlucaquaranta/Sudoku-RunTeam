@@ -5,7 +5,6 @@ object NavRoutes {
     const val GAME = "game"
     const val STATISTICS = "stats"
     const val SETTINGS = "settings"
-    const val RULES = "rules"
     const val RESUME = "resume"
     const val LANGUAGE = "language"
 }

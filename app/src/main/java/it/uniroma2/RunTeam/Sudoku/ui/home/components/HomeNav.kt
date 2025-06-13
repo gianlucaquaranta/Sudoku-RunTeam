@@ -53,7 +53,7 @@ fun HomeNav(
         NavigationBarItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
             label = { Text(text = context.getString(R.string.settings)) },
-            selected = currentRoute == "settings",
+            selected = currentRoute == NavRoutes.SETTINGS,
             onClick = { onNavigate(NavRoutes.SETTINGS) } // placeholder
         )
     }

@@ -26,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import it.uniroma2.RunTeam.Sudoku.ScreenWithNav
+import it.uniroma2.RunTeam.Sudoku.ui.home.settings.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -94,6 +95,16 @@ fun SudokuNavHost(navController: NavHostController) {
 
                 composable(NavRoutes.GAME) {
                     GameScreen(navController)
+                }
+
+                composable(NavRoutes.SETTINGS) {
+                    ScreenWithNav(
+                        currentRoute = NavRoutes.SETTINGS,
+                        onNavigate = { navController.navigate(it) }
+                    ) { padding ->
+                        SettingsScreen(navController = navController,
+                            modifier = Modifier.padding(padding))
+                    }
                 }
             }
         }
