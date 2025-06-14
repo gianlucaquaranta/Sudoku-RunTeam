@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.R
 
 @Composable
-fun SuggestionButton() {
+fun SuggestionButton(modifier: Modifier) {
 
     val context = LocalContext.current
 

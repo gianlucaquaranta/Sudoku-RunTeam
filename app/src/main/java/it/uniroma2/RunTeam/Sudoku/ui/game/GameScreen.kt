@@ -18,6 +18,7 @@ import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
+import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
 
 @Composable
 fun GameScreen(navController: NavHostController) {
