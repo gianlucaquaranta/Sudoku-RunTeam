@@ -19,9 +19,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import it.uniroma2.RunTeam.Sudoku.database.repository.SavedGameRepository
 import it.uniroma2.RunTeam.Sudoku.database.AppDatabase
+import it.uniroma2.RunTeam.Sudoku.database.entity.GameStats
 import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
-import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.SudokuGenerator
 
 class GameViewModel(application: Application) : ViewModel() {
 
@@ -68,10 +68,7 @@ class GameViewModel(application: Application) : ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
         SudokuGenerator(context).generateSudoku(
             difficulty = difficulty,
-            onSuccess = { result ->
-                val (puzzle, solution) = result as Pair<SudokuGrid, SudokuGrid>
-                initializeGame(puzzle, solution)
-            },
+            onSuccess = { (puzzle, solution) -> initializeGame(puzzle, solution) },
             onError = { errorMessage ->
                 Log.e("GameViewModel", "Errore durante il fetch del sudoku: $errorMessage")
             }
@@ -124,6 +121,7 @@ class GameViewModel(application: Application) : ViewModel() {
         }
         undoStack.clear()// ho fatto reset di undo/redo
         redoStack.clear()
+        startTimer() //Metto qui la partenza del timer, altrimenti parte prima del caricamento della griglia
     }
 
     private fun checkCell(row: Int, col: Int): Boolean {
@@ -275,8 +273,8 @@ class GameViewModel(application: Application) : ViewModel() {
                 // TODO: Recupera gli errori rimasti e i suggerimenti rimasti.
                 // Per ora, li imposto a valori di placeholder.
                 // Dovrai avere delle variabili nel tuo GameState o ViewModel per questi.
-                val remainingErrors =3; // Esempio, dovresti tracciarli
-                val remainingHints =0;  // Esempio, dovresti tracciarli
+                val remainingErrors =_uiState.value.errors; // Esempio, dovresti tracciarli
+                val remainingHints =_uiState.value.remainingHints;  // Esempio, dovresti tracciarli
 
                 val gameToSave = SavedGame(
                     // id = 1, // Se vuoi sovrascrivere sempre la stessa partita (per una singola slot di salvataggio)
@@ -305,6 +303,41 @@ class GameViewModel(application: Application) : ViewModel() {
                 Log.w("GameViewModel", "Impossibile salvare la partita: griglia corrente o soluzione mancante.")
                 _shouldNavigateHome.value = true // Naviga comunque a casa anche se il salvataggio fallisce? Decidi tu.
             }
+        }
+    }
+
+    fun updateGameStatsInternal(
+        difficulty: Difficulty,
+        isWin: Boolean
+    ) {
+        viewModelScope.launch {
+            val existingStats = gameStatsRepository.getStatsByDifficulty(difficulty)
+            val currentTime = _uiState.value.secondsElapsed
+
+            val newStats: GameStats = if (existingStats != null) {
+                // Statistiche esistenti, aggiornale
+                val newBestTime = if (isWin && (existingStats.bestTimeSeconds == 0 || currentTime < existingStats.bestTimeSeconds)) {
+                    currentTime
+                } else {
+                    existingStats.bestTimeSeconds
+                }
+                existingStats.copy(
+                    bestTimeSeconds = newBestTime, // Aggiorna solo se è una vittoria e un tempo migliore
+                    wonGames = existingStats.wonGames + if (isWin) 1 else 0,
+                    lostGames = existingStats.lostGames + if (!isWin) 1 else 0,
+                    totalTimePlayedSeconds = existingStats.totalTimePlayedSeconds + currentTime
+                )
+            } else {
+                // Nessuna statistica esistente, creane una nuova
+                GameStats(
+                    difficulty = difficulty,
+                    bestTimeSeconds = if (isWin) currentTime else 0, // Imposta il tempo migliore solo se è una vittoria
+                    wonGames = if (isWin) 1 else 0,
+                    lostGames = if (!isWin) 1 else 0,
+                    totalTimePlayedSeconds = currentTime
+                )
+            }
+            gameStatsRepository.updateGameStats(newStats) // Assumendo che updateGameStats faccia un UPSERT (INSERT or UPDATE)
         }
     }
 

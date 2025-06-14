@@ -19,31 +19,4 @@ interface GameStatsDao {
 
     @Query("SELECT * FROM game_stats WHERE difficulty = :difficulty")
     suspend fun getStatsByDifficulty(difficulty: Difficulty): GameStats?
-
-    // Metodo helper per inserire o aggiornare le statistiche
-    suspend fun upsertStats(difficulty: Difficulty, timeTakenSeconds: Long) {
-        val existingStats = getStatsByDifficulty(difficulty)
-        if (existingStats == null) {
-            insert(
-                GameStats(
-                    difficulty = difficulty,
-                    bestTimeSeconds = timeTakenSeconds,
-                    gamesPlayed = 1,
-                    totalTimePlayedSeconds = timeTakenSeconds
-                )
-            )
-        } else {
-            val newBestTime = if (timeTakenSeconds < existingStats.bestTimeSeconds) {
-                timeTakenSeconds
-            } else {
-                existingStats.bestTimeSeconds
-            }
-            val updatedStats = existingStats.copy(
-                bestTimeSeconds = newBestTime,
-                gamesPlayed = existingStats.gamesPlayed + 1,
-                totalTimePlayedSeconds = existingStats.totalTimePlayedSeconds + timeTakenSeconds
-            )
-            update(updatedStats)
-        }
-    }
 }

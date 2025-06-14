@@ -32,12 +32,13 @@ fun GameScreen(navController: NavHostController) {
     val gameState by gameViewModel.uiState.collectAsState()
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    val currentDifficulty = Difficulty.EASY //TODO mettere la difficoltà all'inizio
 
 
     LaunchedEffect(Unit) {
         val difficulty: Difficulty = Difficulty.EASY //TODO permettere di scegliere la difficoltà
         gameViewModel.createGrid(context, difficulty)
-        gameViewModel.startTimer()
+//        gameViewModel.startTimer()
     }
 
     LaunchedEffect(navigateHome) {
@@ -65,6 +66,12 @@ fun GameScreen(navController: NavHostController) {
         }
 
     if (gameState.isGameCompleted) {
+        LaunchedEffect(gameState.isGameCompleted) {
+            gameViewModel.updateGameStatsInternal( //Aggiorna le statistiche dopo una partita vinta
+                difficulty = currentDifficulty,// Passa la difficoltà corrente
+                true //isWin true
+            )
+        }
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
             title = { Text(context.getString(R.string.congratulations_popup)+"!!!") },
@@ -81,6 +88,12 @@ fun GameScreen(navController: NavHostController) {
     }
 
     if (gameState.isGameLost) {
+        LaunchedEffect(gameState.isGameCompleted) {
+            gameViewModel.updateGameStatsInternal( //Aggiorna le statistiche dopo una partita vinta
+                difficulty = currentDifficulty,// Passa la difficoltà corrente
+                false //isWin false
+            )
+        }
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
             title = { Text(context.getString(R.string.new_game_popup)+"!") },

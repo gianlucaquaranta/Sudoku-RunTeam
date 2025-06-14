@@ -1,6 +1,5 @@
 package it.uniroma2.RunTeam.Sudoku.ui.statistics.components
 
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text

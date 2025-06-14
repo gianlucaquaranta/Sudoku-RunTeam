@@ -1,5 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.statistics
 
+import android.app.Application
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +40,6 @@ fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier)
         context.getString(R.string.difficulty_hard)
     )
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,7 +66,7 @@ fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier)
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            DifficultyStatsSection()
+            DifficultyStatsSection(selectedTabIndex)
         }
     }
 }

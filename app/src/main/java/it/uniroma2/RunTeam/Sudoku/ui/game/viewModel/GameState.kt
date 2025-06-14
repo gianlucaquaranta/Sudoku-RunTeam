@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel
 
 import it.uniroma2.RunTeam.Sudoku.model.Cell
+import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
 
 data class GameState(
@@ -13,4 +14,5 @@ data class GameState(
     var secondsElapsed: Int = 0,
     val isGameCompleted: Boolean = false,
     val isGameLost: Boolean = false
+
 )
