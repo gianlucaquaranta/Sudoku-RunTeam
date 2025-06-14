@@ -19,4 +19,28 @@
     <string name="english">English</string>
     <string name="sel_language">Select Language</string>
     <string name="sel_stats">Your Statistics</string>
+    <string name="sel_theme">Select Theme</string>
+    <string name="sel_theme_light">Light Theme</string>
+    <string name="sel_theme_dark">Dark Theme</string>
+    <string name="sel_theme_jungle">Jungle Theme</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="games_played">Games played</string>
+    <string name="games_won">Games won</string>
+    <string name="best_time">Best time</string>
+    <string name="average_time">Average time</string>
+    <string name="total_time">Total time</string>
+    <string name="suggestion_button">Suggestion</string>
+    <string name="delete_button">Del</string>
+    <string name="note_button">Note</string>
+    <string name="congratulations_popup">Congratulations</string>
+    <string name="you_win_popup">You solved the Sudoku</string>
+    <string name="new_game_popup">New Game</string>
+    <string name="you_lose_popup">You Lose</string>
+    <string name="errors_1_popup">You made </string>
+    <string name="errors_2_popup">mistakes out of </string>
+    <string name="restart_popup">Restart Game</string>
+
+
 </resources>

@@ -8,8 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
 import it.uniroma2.RunTeam.Sudoku.R
 import it.uniroma2.RunTeam.Sudoku.ui.home.settings.components.ThemeOptionItem
 import androidx.navigation.NavController
@@ -18,10 +18,12 @@ import androidx.navigation.NavController
 @Composable
 fun SettingsScreen(navController: NavController,modifier: Modifier = Modifier) {
 
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Theme") },
+                title = { Text(context.getString(R.string.sel_theme)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -38,10 +40,9 @@ fun SettingsScreen(navController: NavController,modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            ThemeOptionItem(title = "Tema Chiaro")
-            ThemeOptionItem(title = "Tema Scuro")
-            ThemeOptionItem(title = "Forse Jungle")
+            ThemeOptionItem(title = context.getString(R.string.sel_theme_dark))
+            ThemeOptionItem(title = context.getString(R.string.sel_theme_light))
+            ThemeOptionItem(title = context.getString(R.string.sel_theme_jungle))
         }
     }
 }

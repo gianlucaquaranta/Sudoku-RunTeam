@@ -17,12 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import it.uniroma2.RunTeam.Sudoku.R
 
 
 @Composable
@@ -33,6 +30,9 @@ fun NumberPad(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val context = LocalContext.current
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.wrapContentWidth()
@@ -55,8 +55,8 @@ fun NumberPad(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             modifier = Modifier.fillMaxWidth()
         ) {
-            NumberKey(label = "Del", onClick = onDeleteClick, modifier = Modifier.weight(1f))
-            NumberKey(label = "Note", onClick = onNoteToggle, modifier = Modifier.weight(1f), isSelected = isNoteMode) // isSelected rimosso per ora, gestito da GameScreen
+            NumberKey(label = context.getString(R.string.delete_button), onClick = onDeleteClick, modifier = Modifier.weight(1f))
+            NumberKey(label = context.getString(R.string.note_button), onClick = onNoteToggle, modifier = Modifier.weight(1f), isSelected = isNoteMode) // isSelected rimosso per ora, gestito da GameScreen
         }
     }
 }
@@ -105,22 +105,6 @@ fun NumberButton(number: Int, onClick: () -> Unit, modifier: Modifier = Modifier
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 300)
-@Composable
-fun NumberPadPreview() {
-    var isNoteMode by remember { mutableStateOf(true) } // metti true per vedere lo stato attivo
-    MaterialTheme {
-        Box(modifier = Modifier.padding(16.dp)) {
-            NumberPad(
-                isNoteMode = isNoteMode,
-                onNoteToggle = { isNoteMode = !isNoteMode },
-                onNumberClick = { println("Numero: $it") },
-                onDeleteClick = { println("Delete") }
             )
         }
     }

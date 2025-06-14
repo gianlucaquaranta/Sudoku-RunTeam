@@ -29,7 +29,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.NumberPad
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
-import androidx.compose.ui.tooling.preview.Preview
+import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
 
@@ -138,13 +138,13 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
     if (gameState.isGameCompleted) {
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
-            title = { Text("Complimenti!") },
-            text = { Text("Hai completato il Sudoku!") },
+            title = { Text(context.getString(R.string.congratulations_popup)+"!!!") },
+            text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
                 Button(onClick = {
                     gameViewModel.createGrid(context,Difficulty.EASY)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
                 }) {
-                    Text("Nuova Partita")
+                    Text(context.getString(R.string.new_game_popup))
                 }
             }
         )
@@ -154,21 +154,21 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
     if (gameState.isGameLost) {
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
-            title = { Text("Hai perso!") },
+            title = { Text(context.getString(R.string.new_game_popup)+"!") },
             text = {
                 val maxErrors = state.errors;
-                Text("Hai commesso $maxErrors errori su $maxErrors")
+                Text( context.getString(R.string.errors_1_popup)+"$maxErrors"+ context.getString(R.string.errors_2_popup)+ "$maxErrors")
             },
             confirmButton = {
                 Button(onClick = {
                     gameViewModel.restartGame()// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
                 }) {
-                    Text("Ricomincia")
+                    Text(context.getString(R.string.restart_popup))
                 }
                 Button(onClick = {
                     gameViewModel.createGrid(context,Difficulty.EASY)
                 }) {
-                    Text("Nuova Partita")
+                    Text(context.getString(R.string.new_game_popup))
                 }
             }
         )
