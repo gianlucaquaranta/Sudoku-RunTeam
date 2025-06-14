@@ -35,10 +35,13 @@ import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
 
 @Composable
 fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
+
     val state by gameViewModel.uiState.collectAsState()
     val context = LocalContext.current
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
     val gameState by gameViewModel.uiState.collectAsState()
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         val difficulty: Difficulty = Difficulty.EASY
@@ -63,78 +66,13 @@ fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = v
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 8.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (state.isLoading) {
-                // Mostra un indicatore di caricamento o un testo
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false)
-                        .aspectRatio(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Puoi usare CircularProgressIndicator o un Text
-                    CircularProgressIndicator()
-                    // Oppure:
-                    // Text("Caricamento griglia...")
-                }
-            } else {
-                // Mostra la SudokuGrid quando non sta caricando
-                state.sudokuGrid?.let {
-                    SudokuGrid(
-                        gridCells = it.grid,
-                        currentlySelectedCell = state.selectedCell,
-                        onCellClick = { gameViewModel.onCellSelected(it) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = false)
-                            .aspectRatio(1f)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            NumberPad(
-                isNoteMode = state.isNoteMode,
-                onNoteToggle = { gameViewModel.toggleNoteMode() },
-                onNumberClick = { number ->
-                    state.selectedCell?.let { cell ->
-                        if (state.isNoteMode) {
-                            cell.toggleNote(number)
-                        } else {
-                            if (cell.value == number && !cell.isValid) {
-                                gameViewModel.clearCellValue(cell)
-                            } else {
-                                gameViewModel.updateCellValue(cell, number)
-                            }
-                        }
-                    }
-                },
-                onDeleteClick = {
-                    state.selectedCell?.let { cell ->
-                        if (cell.notes.isNotEmpty()) {
-                            cell.clearNotes()
-                        } else {
-                            gameViewModel.clearCellValue(cell)
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(0.85f)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SuggestionButton()
+        ResponsiveGameLayout(
+            state = state,
+            gameViewModel = gameViewModel,
+            paddingValues = paddingValues
+        )
         }
-    }
+
     if (gameState.isGameCompleted) {
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
