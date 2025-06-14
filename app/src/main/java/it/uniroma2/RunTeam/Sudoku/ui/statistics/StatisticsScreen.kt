@@ -1,5 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.statistics
-
+package it.uniroma2.RunTeam.Sudoku.ui.statistics
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,9 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyStatsSection
+import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyTabs
 import it.uniroma2.RunTeam.Sudoku.R
-import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyStatsSection
-import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyTabs
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

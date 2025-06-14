@@ -5,10 +5,9 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.rememberNavController
 import it.uniroma2.RunTeam.Sudoku.navigation.SudokuNavHost
-import it.uniroma2.RunTeam.Sudoku.ui.home.theme.SudokuTheme
+import it.uniroma2.RunTeam.Sudoku.ui.theme.SudokuTheme
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {

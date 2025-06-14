@@ -1,5 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
+import android.app.Application
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -11,25 +12,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
-import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 
 @Composable
-fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
+fun GameScreen(navController: NavHostController) {
 
-    val state by gameViewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val gameViewModel: GameViewModel = viewModel(
+        factory = GameViewModelFactory(application)
+    )
+    val state by gameViewModel.uiState.collectAsState()
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
     val gameState by gameViewModel.uiState.collectAsState()
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
+
     LaunchedEffect(Unit) {
-        val difficulty: Difficulty = Difficulty.EASY
+        val difficulty: Difficulty = Difficulty.EASY //TODO permettere di scegliere la difficoltà
         gameViewModel.createGrid(context, difficulty)
         gameViewModel.startTimer()
     }

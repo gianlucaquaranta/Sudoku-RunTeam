@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components
+package it.uniroma2.RunTeam.Sudoku.ui.statistics.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
