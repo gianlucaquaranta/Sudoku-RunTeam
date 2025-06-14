@@ -25,8 +25,7 @@ import androidx.navigation.NavController
 import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyStatsSection
 import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyTabs
 import it.uniroma2.RunTeam.Sudoku.R
-import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyStatsSection
-import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyTabs
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

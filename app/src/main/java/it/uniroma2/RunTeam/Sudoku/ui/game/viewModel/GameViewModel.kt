@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import it.uniroma2.RunTeam.Sudoku.database.repository.SavedGameRepository
 import it.uniroma2.RunTeam.Sudoku.database.AppDatabase
 import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
+import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
 
 class GameViewModel(application: Application) : ViewModel() {
 

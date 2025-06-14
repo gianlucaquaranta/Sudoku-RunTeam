@@ -9,10 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.NumberPad
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 
 
 @Composable
