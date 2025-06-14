@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameViewModel
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 
 
 @Composable
