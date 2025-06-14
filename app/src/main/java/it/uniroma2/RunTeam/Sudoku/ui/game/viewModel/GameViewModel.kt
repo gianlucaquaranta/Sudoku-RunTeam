@@ -75,6 +75,36 @@ class GameViewModel(application: Application) : ViewModel() {
         )
     }
 
+    suspend fun tryResumeGame() : Boolean{
+        try {
+            // Supponiamo che savedGameRepository.getGameById(1) restituisca un oggetto SavedGame
+            // che contiene tutti i dati necessari, inclusa la difficoltà, il tempo trascorso, ecc.
+            val existingGame: SavedGame? = savedGameRepository.getGameById(1) // Il tuo ID di gioco
+
+            if (existingGame != null) {
+                // Qui avviene la "ricreazione" popolando lo stato
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        sudokuGrid = existingGame.currentGridState, // Assicurati che SudokuGrid sia serializzabile/deserializzabile correttamente
+                        solutionGridState = existingGame.solutionGridState, // Anche questo
+                        errors = existingGame.remainingErrors, // O `totalErrorsMadeSoFar` a seconda di come lo chiami
+                        secondsElapsed = existingGame.elapsedTimeInSeconds,
+                        remainingHints = existingGame.remainingHints,
+                    )
+                }
+                return true // Gioco ripreso con successo
+            } else {
+                _uiState.update { it.copy(isLoading = false) } // Non c'era un gioco da caricare
+                return false // Nessun gioco da riprendere
+            }
+        } catch (e: Exception) {
+            Log.e("GameViewModel", "Errore durante il resume della partita: ${e.message}", e)
+            _uiState.update { it.copy(isLoading = false) } // Gestisci l'errore
+            return false
+        }
+    }
+
     private fun initializeGame(puzzle: SudokuGrid, solution: SudokuGrid){
         solutionGrid = solution
 
@@ -270,7 +300,6 @@ class GameViewModel(application: Application) : ViewModel() {
             val currentSolutionGrid = solutionGrid // Assicurati che solutionGrid sia aggiornato
 
             if (currentGrid != null && currentSolutionGrid != null) {
-                // TODO: Recupera gli errori rimasti e i suggerimenti rimasti.
                 // Per ora, li imposto a valori di placeholder.
                 // Dovrai avere delle variabili nel tuo GameState o ViewModel per questi.
                 val remainingErrors =_uiState.value.errors; // Esempio, dovresti tracciarli
@@ -293,7 +322,6 @@ class GameViewModel(application: Application) : ViewModel() {
                     // Logga il tipo di eccezione e il messaggio
                     Log.e("GameViewModel", "Errore durante il salvataggio della partita: ${e.javaClass.simpleName} - ${e.message}", e)
                     // Puoi anche stampare lo stack trace completo, utile per il debug approfondito
-                    // e.printStackTrace() // Sconsigliato in produzione, ma utile durante lo sviluppo
                 }
                 // o updateGame se stai aggiornando una partita esistente
 

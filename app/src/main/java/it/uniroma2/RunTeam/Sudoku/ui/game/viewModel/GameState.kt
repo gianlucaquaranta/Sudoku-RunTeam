@@ -7,6 +7,7 @@ import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
 data class GameState(
     var isLoading: Boolean = true,
     var sudokuGrid: SudokuGrid ?= null,
+    var solutionGridState: SudokuGrid ?= null,
     var selectedCell: Cell ?= null,
     var errors: Int = 0,
     var remainingHints: Int = 0,

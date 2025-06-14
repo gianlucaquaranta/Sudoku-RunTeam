@@ -62,6 +62,7 @@ fun SudokuNavHost(navController: NavHostController) {
                     ) { padding ->
                         HomeScreen(
                             onPlayClick = { navController.navigate(NavRoutes.GAME) },
+                            onResumeClick = { navController.navigate(NavRoutes.RESUME) },
                             modifier = Modifier.padding(padding)
                         )
                     }
@@ -92,7 +93,11 @@ fun SudokuNavHost(navController: NavHostController) {
                 }
 
                 composable(NavRoutes.GAME) {
-                    GameScreen(navController)
+                    GameScreen(navController, NavRoutes.GAME)
+                }
+
+                composable(NavRoutes.RESUME) {
+                    GameScreen(navController, NavRoutes.RESUME)
                 }
 
                 composable(NavRoutes.SETTINGS) {

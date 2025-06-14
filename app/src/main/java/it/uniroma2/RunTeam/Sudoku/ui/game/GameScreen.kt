@@ -17,11 +17,12 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
+import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
 
 @Composable
-fun GameScreen(navController: NavHostController) {
+fun GameScreen(navController: NavHostController, gameStartMode : String) {
 
     val context = LocalContext.current
     val application = context.applicationContext as Application
@@ -36,10 +37,21 @@ fun GameScreen(navController: NavHostController) {
     val currentDifficulty = Difficulty.EASY //TODO mettere la difficoltà all'inizio
 
 
-    LaunchedEffect(Unit) {
-        val difficulty: Difficulty = Difficulty.EASY //TODO permettere di scegliere la difficoltà
-        gameViewModel.createGrid(context, difficulty)
-//        gameViewModel.startTimer()
+    LaunchedEffect(gameStartMode) { // Esegui questo effetto quando gameStartMode cambia (o all'inizio)
+        when (gameStartMode) {
+            NavRoutes.GAME -> {
+                val difficulty: Difficulty = Difficulty.EASY //TODO: permettere di scegliere la difficoltà
+                gameViewModel.createGrid(context, difficulty)
+            }
+            NavRoutes.RESUME -> {
+                val gameLoaded = gameViewModel.tryResumeGame()
+                if (!gameLoaded) {
+                    // Se non c'è un gioco da riprendere, inizia uno nuovo come fallback
+                    val difficulty: Difficulty = Difficulty.EASY
+                    gameViewModel.createGrid(context, difficulty)
+                }
+            }
+        }
     }
 
     LaunchedEffect(navigateHome) {
