@@ -49,7 +49,7 @@ fun GameScreen(navController: NavHostController) {
 
 
     LaunchedEffect(Unit) {
-        val difficulty: Difficulty = Difficulty.EASY
+        val difficulty: Difficulty = Difficulty.EASY //TODO permettere di scegliere la difficoltà
         gameViewModel.createGrid(context, difficulty)
         gameViewModel.startTimer()
     }

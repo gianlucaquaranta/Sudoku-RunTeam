@@ -1,7 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.navigation
 
 import android.content.Context
-import android.content.res.Configuration
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,12 +12,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import it.uniroma2.RunTeam.Sudoku.ui.home.HomeScreen
 import it.uniroma2.RunTeam.Sudoku.ui.game.GameScreen
 import it.uniroma2.RunTeam.Sudoku.ui.home.language.LanguageScreen
-import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.StatisticsScreen
+import it.uniroma2.RunTeam.Sudoku.ui.statistics.StatisticsScreen
 import java.util.Locale
 import it.uniroma2.RunTeam.Sudoku.LocalAppLocale
 import it.uniroma2.RunTeam.Sudoku.updateLocale

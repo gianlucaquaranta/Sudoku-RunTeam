@@ -7,13 +7,23 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import it.uniroma2.RunTeam.Sudoku.database.dao.SavedGameDao
 import it.uniroma2.RunTeam.Sudoku.database.converter.SudokuGridConverter
+import it.uniroma2.RunTeam.Sudoku.database.dao.GameStatsDao
+import it.uniroma2.RunTeam.Sudoku.database.entity.GameStats
 import it.uniroma2.RunTeam.Sudoku.database.entity.SavedGame
 
-@Database(entities = [SavedGame::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        SavedGame::class,
+        GameStats::class
+    ],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(SudokuGridConverter::class) // Registra il TypeConverter
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun savedGameDao(): SavedGameDao
+    abstract fun gameStatsDao(): GameStatsDao
 
     companion object {
         @Volatile
@@ -26,7 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "sudoku_database" // Nome del file del database
                 )
-                    //.fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

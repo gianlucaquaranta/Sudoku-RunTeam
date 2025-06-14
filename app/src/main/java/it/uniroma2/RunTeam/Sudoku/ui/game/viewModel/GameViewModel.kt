@@ -19,11 +19,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import it.uniroma2.RunTeam.Sudoku.database.repository.SavedGameRepository
 import it.uniroma2.RunTeam.Sudoku.database.AppDatabase
+import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
 
 class GameViewModel(application: Application) : ViewModel() {
 
     private val db = AppDatabase.getDatabase(application)
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
+    private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
 
     private val _uiState = MutableStateFlow(GameState()) //attributo privato per mantenere lo stato di gioco, modificabile perché Mutable ma solo da viewmodel
     val uiState: StateFlow<GameState> = _uiState.asStateFlow() //Pubblico ma read-only, serve alla UI per leggere lo stato del gioco
