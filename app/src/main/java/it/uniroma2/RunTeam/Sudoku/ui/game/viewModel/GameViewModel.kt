@@ -21,10 +21,11 @@ import it.uniroma2.RunTeam.Sudoku.database.repository.SavedGameRepository
 import it.uniroma2.RunTeam.Sudoku.database.AppDatabase
 import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.SudokuGenerator
 
 class GameViewModel(application: Application) : ViewModel() {
 
-    private val db = AppDatabase.getDatabase(application)
+    private val db = AppDatabase.getDatabase(application) // Corretto uso di application context
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
     private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
 
@@ -67,7 +68,10 @@ class GameViewModel(application: Application) : ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
         SudokuGenerator(context).generateSudoku(
             difficulty = difficulty,
-            onSuccess = { (puzzle, solution) -> initializeGame(puzzle, solution) },
+            onSuccess = { result ->
+                val (puzzle, solution) = result as Pair<SudokuGrid, SudokuGrid>
+                initializeGame(puzzle, solution)
+            },
             onError = { errorMessage ->
                 Log.e("GameViewModel", "Errore durante il fetch del sudoku: $errorMessage")
             }
@@ -262,6 +266,7 @@ class GameViewModel(application: Application) : ViewModel() {
 
     fun onSaveExit(){
         viewModelScope.launch {
+            Log.d("DB is open: ", db.isOpen.toString())
             val currentState = _uiState.value
             val currentGrid = currentState.sudokuGrid
             val currentSolutionGrid = solutionGrid // Assicurati che solutionGrid sia aggiornato
@@ -270,13 +275,13 @@ class GameViewModel(application: Application) : ViewModel() {
                 // TODO: Recupera gli errori rimasti e i suggerimenti rimasti.
                 // Per ora, li imposto a valori di placeholder.
                 // Dovrai avere delle variabili nel tuo GameState o ViewModel per questi.
-                val remainingErrors =30; // Esempio, dovresti tracciarli
-                val remainingHints =30;  // Esempio, dovresti tracciarli
+                val remainingErrors =3; // Esempio, dovresti tracciarli
+                val remainingHints =0;  // Esempio, dovresti tracciarli
 
                 val gameToSave = SavedGame(
                     // id = 1, // Se vuoi sovrascrivere sempre la stessa partita (per una singola slot di salvataggio)
                     // Altrimenti lascia che sia autogenerato se vuoi più slot
-                    id=10,
+                    id=1,
                     currentGridState = currentGrid,
                     solutionGridState = currentSolutionGrid,
                     remainingErrors = remainingErrors, // Sostituisci con i valori reali
