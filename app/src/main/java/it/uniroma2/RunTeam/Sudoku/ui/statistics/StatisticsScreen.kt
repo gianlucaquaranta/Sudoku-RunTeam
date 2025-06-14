@@ -19,21 +19,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyStatsSection
 import it.uniroma2.RunTeam.Sudoku.ui.statistics.components.DifficultyTabs
+import it.uniroma2.RunTeam.Sudoku.R
+import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyStatsSection
+import it.uniroma2.RunTeam.Sudoku.ui.home.statistics.components.DifficultyTabs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier) {
+
+    val context = LocalContext.current
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val difficulties = listOf("Easy", "Medium", "Hard")
+    val difficulties = listOf(
+        context.getString(R.string.difficulty_easy),
+        context.getString(R.string.difficulty_medium),
+        context.getString(R.string.difficulty_hard)
+    )
+
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Statistiche") },
+                title = { Text(context.getString(R.string.sel_stats)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")

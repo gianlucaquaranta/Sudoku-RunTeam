@@ -36,7 +36,7 @@ fun GameTopBar(    seconds: Int,
                 Icon(Icons.Default.DarkMode, contentDescription = "Change Theme")
             }
             IconButton(onClick = onSaveExit) {
-                Icon(Icons.Default.ExitToApp, contentDescription = "Exit")
+                Icon(Icons.Default.Home, contentDescription = "Exit")
             }
         },
         navigationIcon = {

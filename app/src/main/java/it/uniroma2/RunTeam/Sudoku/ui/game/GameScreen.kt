@@ -1,6 +1,5 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,13 +29,15 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.NumberPad
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SudokuGrid
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.SuggestionButton
+import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
 import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 
 @Composable
-fun GameScreen(navController: NavHostController) {
+fun GameScreen(navController: NavHostController,gameViewModel: GameViewModel = viewModel()) {
 
+    val state by gameViewModel.uiState.collectAsState()
     val context = LocalContext.current
     val application = context.applicationContext as Application
     val gameViewModel: GameViewModel = viewModel(
@@ -46,6 +47,8 @@ fun GameScreen(navController: NavHostController) {
     val state by gameViewModel.uiState.collectAsState()
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
     val gameState by gameViewModel.uiState.collectAsState()
+    val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
 
 
     LaunchedEffect(Unit) {
@@ -71,91 +74,49 @@ fun GameScreen(navController: NavHostController) {
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 8.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (state.isLoading) {
-                // Mostra un indicatore di caricamento o un testo
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false)
-                        .aspectRatio(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Puoi usare CircularProgressIndicator o un Text
-                    CircularProgressIndicator()
-                    // Oppure:
-                    // Text("Caricamento griglia...")
-                }
-            } else {
-                // Mostra la SudokuGrid quando non sta caricando
-                state.sudokuGrid?.let {
-                    SudokuGrid(
-                        gridCells = it.grid,
-                        currentlySelectedCell = state.selectedCell,
-                        onCellClick = { gameViewModel.onCellSelected(it) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = false)
-                            .aspectRatio(1f)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            NumberPad(
-                isNoteMode = state.isNoteMode,
-                onNoteToggle = { gameViewModel.toggleNoteMode() },
-                onNumberClick = { number ->
-                    state.selectedCell?.let { cell ->
-                        if (state.isNoteMode) {
-                            cell.toggleNote(number)
-                        } else {
-                            if (cell.value == number && !cell.isValid) {
-                                gameViewModel.clearCellValue(cell)
-                            } else {
-                                gameViewModel.updateCellValue(cell, number)
-                            }
-                        }
-                    }
-                },
-                onDeleteClick = {
-                    state.selectedCell?.let { cell ->
-                        if (state.isNoteMode && cell.notes.isNotEmpty()) {
-                            cell.clearNotes()
-                        } else {
-                            gameViewModel.clearCellValue(cell)
-                        }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(0.85f)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            SuggestionButton()
+        ResponsiveGameLayout(
+            state = state,
+            gameViewModel = gameViewModel,
+            paddingValues = paddingValues
+        )
         }
-    }
+
     if (gameState.isGameCompleted) {
         AlertDialog(
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
-            title = { Text("Complimenti!") },
-            text = { Text("Hai completato il Sudoku!") },
+            title = { Text(context.getString(R.string.congratulations_popup)+"!!!") },
+            text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
                 Button(onClick = {
                     gameViewModel.createGrid(context,Difficulty.EASY)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
                 }) {
-                    Text("Nuova Partita")
+                    Text(context.getString(R.string.new_game_popup))
                 }
             }
         )
         CelebrationConfetti(show = true)
+    }
+
+    if (gameState.isGameLost) {
+        AlertDialog(
+            onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
+            title = { Text(context.getString(R.string.new_game_popup)+"!") },
+            text = {
+                val maxErrors = state.errors;
+                Text( context.getString(R.string.errors_1_popup)+"$maxErrors"+ context.getString(R.string.errors_2_popup)+ "$maxErrors")
+            },
+            confirmButton = {
+                Button(onClick = {
+                    gameViewModel.restartGame()// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                }) {
+                    Text(context.getString(R.string.restart_popup))
+                }
+                Button(onClick = {
+                    gameViewModel.createGrid(context,Difficulty.EASY)
+                }) {
+                    Text(context.getString(R.string.new_game_popup))
+                }
+            }
+        )
     }
 }

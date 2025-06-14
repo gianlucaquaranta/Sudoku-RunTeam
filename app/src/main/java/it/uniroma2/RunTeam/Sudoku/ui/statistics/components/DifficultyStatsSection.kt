@@ -13,10 +13,15 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import it.uniroma2.RunTeam.Sudoku.R
 
 @Composable
 fun DifficultyStatsSection() {
+
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -24,11 +29,13 @@ fun DifficultyStatsSection() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        StatCard(label = "Mealcalendar", value = "-")
-        StatCard(label = "Partite vinte", value = "-")
-        StatCard(label = "Miglior tempo", value = "-")
-        StatCard(label = "Tempo medio", value = "-")
-        StatCard(label = "Tempo totale", value = "-")
+        StatCard(label = context.getString(R.string.games_played), value = "-")
+        StatCard(label = context.getString(R.string.games_won), value = "-")
+        StatCard(label = context.getString(R.string.best_time), value = "-")
+        StatCard(label = context.getString(R.string.average_time), value = "-")
+        StatCard(label = context.getString(R.string.total_time), value = "-")
+
+
     }
 }
 
