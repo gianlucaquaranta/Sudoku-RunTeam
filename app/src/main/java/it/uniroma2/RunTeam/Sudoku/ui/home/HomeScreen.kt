@@ -29,16 +29,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-
+import it.uniroma2.RunTeam.Sudoku.ui.home.components.DifficultySelectionDialog
+import it.uniroma2.RunTeam.Sudoku.model.Difficulty
+import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
 
 @Composable
 fun HomeScreen(
-    onPlayClick: () -> Unit,
+    onPlayClick: (Difficulty) -> Unit, // Modificato per passare la difficoltà
     onResumeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     var showRulesDialog by remember { mutableStateOf(false) }
+    var showDifficultyDialog by remember { mutableStateOf(false) } // Stato per il popup della difficoltà
 
     // Floating button animazioni
     val rotation by animateFloatAsState(
@@ -68,7 +71,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             PlayButton(
-                onClick = onPlayClick,
+                onClick = { showDifficultyDialog = true }, // Mostra il popup della difficoltà
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
@@ -135,8 +138,15 @@ fun HomeScreen(
                 )
             }
         }
+
+        if (showDifficultyDialog) {
+            DifficultySelectionDialog(
+                onDismissRequest = { showDifficultyDialog = false },
+                onDifficultySelected = { difficulty ->
+                    showDifficultyDialog = false
+                    onPlayClick(difficulty)
+                }
+            )
+        }
     }
 }
-
-
-
