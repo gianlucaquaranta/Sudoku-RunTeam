@@ -16,14 +16,12 @@ data class Cell(
     val newValue: Int?
 ) {
     var value: Int by mutableStateOf(initialValue ?: 0) // Valore iniziale, 0 per vuoto
-        private set // Rendiamo il setter privato se vogliamo che sia modificato solo tramite metodi specifici della classe o da GameScreen
+        set
 
     var isSelected: Boolean by mutableStateOf(false) // Useremo uno stato separato in GameScreen per la cella attiva
     // ma questo può essere usato per altri scopi di UI
     var isIncorrect: Boolean by mutableStateOf(false)
-        private set
     var isValid: Boolean by mutableStateOf(false)
-        private set
     var notes: Set<Int> by mutableStateOf(emptySet())
 
 

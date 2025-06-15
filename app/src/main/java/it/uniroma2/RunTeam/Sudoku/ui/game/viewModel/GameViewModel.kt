@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import it.uniroma2.RunTeam.Sudoku.database.repository.SavedGameRepository
 import it.uniroma2.RunTeam.Sudoku.database.AppDatabase
+import it.uniroma2.RunTeam.Sudoku.database.dto.CellDto
+import it.uniroma2.RunTeam.Sudoku.database.dto.SudokuGridDto
 import it.uniroma2.RunTeam.Sudoku.database.entity.GameStats
 import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
@@ -59,10 +61,10 @@ class GameViewModel(application: Application) : ViewModel() {
         timerJob = null
     }
 
-    fun resetTimer() {
-        stopTimer()
-        _uiState.update { it.copy(secondsElapsed = 0) }
-    }
+//    fun resetTimer() {
+//        stopTimer()
+//        _uiState.update { it.copy(secondsElapsed = 0) }
+//    }
 
     fun createGrid(context: Context, difficulty: Difficulty) {
         _uiState.update { it.copy(isLoading = true) }
@@ -75,32 +77,38 @@ class GameViewModel(application: Application) : ViewModel() {
         )
     }
 
-    suspend fun tryResumeGame() : Boolean{
+    suspend fun tryResumeGame(): Boolean {
         try {
-            // Supponiamo che savedGameRepository.getGameById(1) restituisca un oggetto SavedGame
-            // che contiene tutti i dati necessari, inclusa la difficoltà, il tempo trascorso, ecc.
-            val existingGame: SavedGame? = savedGameRepository.getGameById(1) // Il tuo ID di gioco
+            val existingGame = savedGameRepository.getGameById(1)
 
             if (existingGame != null) {
-                // Qui avviene la "ricreazione" popolando lo stato
+                // Converte i DTO in SudokuGrid "reali" con state per la UI
+                val currentGrid = existingGame.currentGridState.toSudokuGrid()
+                val solutionGrid = existingGame.solutionGridState.toSudokuGrid()
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        sudokuGrid = existingGame.currentGridState, // Assicurati che SudokuGrid sia serializzabile/deserializzabile correttamente
-                        solutionGridState = existingGame.solutionGridState, // Anche questo
-                        errors = existingGame.remainingErrors, // O `totalErrorsMadeSoFar` a seconda di come lo chiami
+                        sudokuGrid = currentGrid,
+                        solutionGridState = solutionGrid,
+                        errors = existingGame.remainingErrors,
                         secondsElapsed = existingGame.elapsedTimeInSeconds,
                         remainingHints = existingGame.remainingHints,
                     )
                 }
-                return true // Gioco ripreso con successo
+                maxErrors = when(solutionGrid.difficulty){
+                    Difficulty.EASY -> { 5 }
+                    Difficulty.MEDIUM -> { 3 }
+                    Difficulty.DIFFICULT -> { 2 }
+                }
+                return true
             } else {
-                _uiState.update { it.copy(isLoading = false) } // Non c'era un gioco da caricare
-                return false // Nessun gioco da riprendere
+                _uiState.update { it.copy(isLoading = false) }
+                return false
             }
         } catch (e: Exception) {
             Log.e("GameViewModel", "Errore durante il resume della partita: ${e.message}", e)
-            _uiState.update { it.copy(isLoading = false) } // Gestisci l'errore
+            _uiState.update { it.copy(isLoading = false) }
             return false
         }
     }
@@ -151,7 +159,6 @@ class GameViewModel(application: Application) : ViewModel() {
         }
         undoStack.clear()// ho fatto reset di undo/redo
         redoStack.clear()
-        startTimer() //Metto qui la partenza del timer, altrimenti parte prima del caricamento della griglia
     }
 
     private fun checkCell(row: Int, col: Int): Boolean {
@@ -292,44 +299,37 @@ class GameViewModel(application: Application) : ViewModel() {
         Log.d("GameViewModel", "Game restarted.")
     }
 
-    fun onSaveExit(){
+    fun onSaveExit() {
         viewModelScope.launch {
             Log.d("DB is open: ", db.isOpen.toString())
             val currentState = _uiState.value
             val currentGrid = currentState.sudokuGrid
-            val currentSolutionGrid = solutionGrid // Assicurati che solutionGrid sia aggiornato
+            val currentSolutionGrid = solutionGrid
 
             if (currentGrid != null && currentSolutionGrid != null) {
-                // Per ora, li imposto a valori di placeholder.
-                // Dovrai avere delle variabili nel tuo GameState o ViewModel per questi.
-                val remainingErrors =_uiState.value.errors; // Esempio, dovresti tracciarli
-                val remainingHints =_uiState.value.remainingHints;  // Esempio, dovresti tracciarli
+                val remainingErrors = currentState.errors
+                val remainingHints = currentState.remainingHints
 
                 val gameToSave = SavedGame(
-                    // id = 1, // Se vuoi sovrascrivere sempre la stessa partita (per una singola slot di salvataggio)
-                    // Altrimenti lascia che sia autogenerato se vuoi più slot
-                    id=1,
-                    currentGridState = currentGrid,
-                    solutionGridState = currentSolutionGrid,
-                    remainingErrors = remainingErrors, // Sostituisci con i valori reali
-                    remainingHints = remainingHints,   // Sostituisci con i valori reali
+                    id = 1,
+                    currentGridState = currentGrid.toDto(),
+                    solutionGridState = currentSolutionGrid.toDto(),
+                    remainingErrors = remainingErrors,
+                    remainingHints = remainingHints,
                     elapsedTimeInSeconds = currentState.secondsElapsed,
                 )
+
                 try {
                     savedGameRepository.updateGame(gameToSave)
-                    Log.d("GameViewModel", "Partita salvata con successo con ID: ${gameToSave.id} (se autogenerato)") // Aggiungi un log di successo
-                } catch (e: Exception) { // Cattura l'eccezione specifica o una più generica se necessario
-                    // Logga il tipo di eccezione e il messaggio
+                    Log.d("GameViewModel", "Partita salvata con successo con ID: ${gameToSave.id}")
+                } catch (e: Exception) {
                     Log.e("GameViewModel", "Errore durante il salvataggio della partita: ${e.javaClass.simpleName} - ${e.message}", e)
-                    // Puoi anche stampare lo stack trace completo, utile per il debug approfondito
                 }
-                // o updateGame se stai aggiornando una partita esistente
 
-                Log.d("GameViewModel", "Partita salvata con ID: ${gameToSave.id} (se autogenerato)")
                 _shouldNavigateHome.value = true
             } else {
                 Log.w("GameViewModel", "Impossibile salvare la partita: griglia corrente o soluzione mancante.")
-                _shouldNavigateHome.value = true // Naviga comunque a casa anche se il salvataggio fallisce? Decidi tu.
+                _shouldNavigateHome.value = true
             }
         }
     }
@@ -390,4 +390,51 @@ class GameViewModel(application: Application) : ViewModel() {
         // Tutte le celle sono piene e corrette
         _uiState.update { it.copy(isGameCompleted = true) }
     }
+
+
+    //Metodi conversione
+    fun Cell.toDto(): CellDto = CellDto(
+        row = row,
+        col = col,
+        isStartingCell = isStartingCell,
+        initialValue = initialValue,
+        oldValue = oldValue,
+        newValue = newValue,
+        value = value,
+        isSelected = isSelected,
+        isIncorrect = isIncorrect,
+        isValid = isValid,
+        notes = notes
+    )
+
+    fun SudokuGrid.toDto(): SudokuGridDto {
+        val gridDto = grid.map { row -> row.map { it.toDto() } }
+        return SudokuGridDto(grid = gridDto, difficulty = difficulty)
+    }
+
+    private fun SudokuGridDto.toSudokuGrid(): SudokuGrid {
+        val convertedGrid = Array(9) { row ->
+            Array(9) { col ->
+                grid[row][col].toCell()
+            }
+        }
+        return SudokuGrid(grid = convertedGrid, difficulty = difficulty)
+    }
+
+    private fun CellDto.toCell(): Cell = Cell(
+        row = row,
+        col = col,
+        isStartingCell = isStartingCell,
+        initialValue = initialValue,
+        oldValue = oldValue,
+        newValue = newValue
+    ).apply {
+        value = this@toCell.value
+        isSelected = this@toCell.isSelected
+        isIncorrect = this@toCell.isIncorrect
+        isValid = this@toCell.isValid
+        notes = this@toCell.notes
+    }
+
+
 }

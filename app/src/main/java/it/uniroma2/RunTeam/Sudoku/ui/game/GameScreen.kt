@@ -52,6 +52,7 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
                 }
             }
         }
+        gameViewModel.startTimer()
     }
 
     LaunchedEffect(navigateHome) {
@@ -80,6 +81,7 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
 
     if (gameState.isGameCompleted) {
         LaunchedEffect(gameState.isGameCompleted) {
+            gameViewModel.stopTimer()
             gameViewModel.updateGameStatsInternal( //Aggiorna le statistiche dopo una partita vinta
                 difficulty = currentDifficulty,// Passa la difficoltà corrente
                 true //isWin true
@@ -102,6 +104,7 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
 
     if (gameState.isGameLost) {
         LaunchedEffect(gameState.isGameCompleted) {
+            gameViewModel.stopTimer()
             gameViewModel.updateGameStatsInternal( //Aggiorna le statistiche dopo una partita vinta
                 difficulty = currentDifficulty,// Passa la difficoltà corrente
                 false //isWin false

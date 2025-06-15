@@ -30,15 +30,19 @@ class StatisticsViewModel(application: Application) : ViewModel() {
                     2 -> Difficulty.DIFFICULT
                     else -> throw IllegalArgumentException("Invalid index")
                 }
-                val fetchedStatsEntity: GameStats? = gameStatsRepository.getStatsByDifficulty(difficulty)
+                val fetchedStatsEntity: GameStats? =
+                    gameStatsRepository.getStatsByDifficulty(difficulty)
 
                 if (fetchedStatsEntity != null) {
-                    var gamesPlayed = fetchedStatsEntity.wonGames + fetchedStatsEntity.lostGames
+                    val gamesPlayed = fetchedStatsEntity.wonGames + fetchedStatsEntity.lostGames
                     _stats.value = DifficultyStats(
                         gamesPlayed = gamesPlayed.toString(),
                         gamesWon = fetchedStatsEntity.wonGames.toString(),
                         bestTime = formatTime(fetchedStatsEntity.bestTimeSeconds), // Esempio se bestTime è un Long
-                        averageTime = calculateAndFormatAverageTime(fetchedStatsEntity.totalTimePlayedSeconds, gamesPlayed),
+                        averageTime = calculateAndFormatAverageTime(
+                            fetchedStatsEntity.totalTimePlayedSeconds,
+                            fetchedStatsEntity.wonGames
+                        ),
                         totalTime = formatTime(fetchedStatsEntity.totalTimePlayedSeconds)
                     )
                 } else {
@@ -69,8 +73,7 @@ class StatisticsViewModel(application: Application) : ViewModel() {
     }
 
     /**
-     * Funzione di utilità di esempio per formattare il tempo da millisecondi a "mm:ss".
-     * Adattala alle tue esigenze.
+     * Funzione di utilità di esempio per formattare il tempo da secondi a "mm:ss"
      */
     private fun formatTime(totalSeconds: Int?): String {
         if (totalSeconds == null || totalSeconds <= 0) return "-"
