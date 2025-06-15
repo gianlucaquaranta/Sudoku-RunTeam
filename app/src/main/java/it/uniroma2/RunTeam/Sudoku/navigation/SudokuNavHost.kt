@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import it.uniroma2.RunTeam.Sudoku.ScreenWithNav
+import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 import it.uniroma2.RunTeam.Sudoku.ui.home.settings.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -61,10 +62,13 @@ fun SudokuNavHost(navController: NavHostController) {
                         onNavigate = { navController.navigate(it) }
                     ) { padding ->
                         HomeScreen(
-                            onPlayClick = { navController.navigate(NavRoutes.GAME) },
+                            onPlayClick = { difficulty ->
+                                navController.navigate("game/${difficulty.name}")
+                            },
                             onResumeClick = { navController.navigate(NavRoutes.RESUME) },
                             modifier = Modifier.padding(padding)
                         )
+
                     }
                 }
 
@@ -92,12 +96,15 @@ fun SudokuNavHost(navController: NavHostController) {
                     }
                 }
 
-                composable(NavRoutes.GAME) {
-                    GameScreen(navController, NavRoutes.GAME)
+                composable("${NavRoutes.GAME}/{difficulty}") { backStackEntry ->
+                    val difficultyArg = backStackEntry.arguments?.getString("difficulty") ?: "EASY"
+                    val difficulty = Difficulty.valueOf(difficultyArg)
+                    GameScreen(navController, NavRoutes.GAME, difficulty)
                 }
 
+
                 composable(NavRoutes.RESUME) {
-                    GameScreen(navController, NavRoutes.RESUME)
+                    GameScreen(navController, NavRoutes.RESUME, Difficulty.EASY) //Solo per aggiungere il parametro, verrò poi settato correttamente in GameScreen
                 }
 
                 composable(NavRoutes.SETTINGS) {

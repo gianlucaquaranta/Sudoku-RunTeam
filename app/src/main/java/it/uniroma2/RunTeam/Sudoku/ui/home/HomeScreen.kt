@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import it.uniroma2.RunTeam.Sudoku.ui.home.components.DifficultySelectionDialog
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
-import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
 
 @Composable
 fun HomeScreen(

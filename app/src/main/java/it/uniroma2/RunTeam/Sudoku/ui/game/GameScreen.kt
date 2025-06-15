@@ -22,7 +22,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
 
 @Composable
-fun GameScreen(navController: NavHostController, gameStartMode : String) {
+fun GameScreen(navController: NavHostController, gameStartMode: String, difficulty: Difficulty) {
 
     val context = LocalContext.current
     val application = context.applicationContext as Application
@@ -34,21 +34,20 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
     val gameState by gameViewModel.uiState.collectAsState()
     val configuration = androidx.compose.ui.platform.LocalConfiguration.current
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
-    val currentDifficulty = Difficulty.EASY //TODO mettere la difficoltà all'inizio
-
+    var currentDifficulty = difficulty
 
     LaunchedEffect(gameStartMode) { // Esegui questo effetto quando gameStartMode cambia (o all'inizio)
         when (gameStartMode) {
             NavRoutes.GAME -> {
-                val difficulty: Difficulty = Difficulty.EASY //TODO: permettere di scegliere la difficoltà
                 gameViewModel.createGrid(context, difficulty)
             }
             NavRoutes.RESUME -> {
                 val gameLoaded = gameViewModel.tryResumeGame()
-                if (!gameLoaded) {
-                    // Se non c'è un gioco da riprendere, inizia uno nuovo come fallback
-                    val difficulty: Difficulty = Difficulty.EASY
-                    gameViewModel.createGrid(context, difficulty)
+                if (gameLoaded!=null) {
+                    currentDifficulty = gameLoaded //Setto qui la difficoltà della partita caricata
+                }else{
+                    currentDifficulty = Difficulty.EASY //Eventualità nel caso in cui non trovi nessuna partita caricata
+                    gameViewModel.createGrid(context, currentDifficulty)
                 }
             }
         }
@@ -93,7 +92,7 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
             text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
                 Button(onClick = {
-                    gameViewModel.createGrid(context,Difficulty.EASY)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                    gameViewModel.createGrid(context, currentDifficulty)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
                 }) {
                     Text(context.getString(R.string.new_game_popup))
                 }
@@ -114,17 +113,17 @@ fun GameScreen(navController: NavHostController, gameStartMode : String) {
             onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
             title = { Text(context.getString(R.string.new_game_popup)+"!") },
             text = {
-                val maxErrors = state.errors;
+                val maxErrors = state.errors
                 Text( context.getString(R.string.errors_1_popup)+"$maxErrors"+ context.getString(R.string.errors_2_popup)+ "$maxErrors")
             },
             confirmButton = {
                 Button(onClick = {
-                    gameViewModel.restartGame()// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                    gameViewModel.restartGame()
                 }) {
                     Text(context.getString(R.string.restart_popup))
                 }
                 Button(onClick = {
-                    gameViewModel.createGrid(context,Difficulty.EASY)
+                    gameViewModel.createGrid(context, currentDifficulty)
                 }) {
                     Text(context.getString(R.string.new_game_popup))
                 }

@@ -62,7 +62,7 @@ fun DifficultySelectionDialog(
                     Text(context.getString(R.string.difficulty_medium))
                 }
                 Button(
-                    onClick = { onDifficultySelected(Difficulty.DIFFICULT) },
+                    onClick = { onDifficultySelected(Difficulty.HARD) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(context.getString(R.string.difficulty_hard))

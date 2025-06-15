@@ -77,7 +77,7 @@ class GameViewModel(application: Application) : ViewModel() {
         )
     }
 
-    suspend fun tryResumeGame(): Boolean {
+    suspend fun tryResumeGame(): Difficulty? {
         try {
             val existingGame = savedGameRepository.getGameById(1)
 
@@ -85,6 +85,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 // Converte i DTO in SudokuGrid "reali" con state per la UI
                 val currentGrid = existingGame.currentGridState.toSudokuGrid()
                 val solutionGrid = existingGame.solutionGridState.toSudokuGrid()
+                val difficultyGame = solutionGrid.difficulty
 
                 _uiState.update {
                     it.copy(
@@ -96,20 +97,20 @@ class GameViewModel(application: Application) : ViewModel() {
                         remainingHints = existingGame.remainingHints,
                     )
                 }
-                maxErrors = when(solutionGrid.difficulty){
+                maxErrors = when(difficultyGame){
                     Difficulty.EASY -> { 5 }
                     Difficulty.MEDIUM -> { 3 }
-                    Difficulty.DIFFICULT -> { 2 }
+                    Difficulty.HARD -> { 2 }
                 }
-                return true
+                return difficultyGame
             } else {
                 _uiState.update { it.copy(isLoading = false) }
-                return false
+                return null
             }
         } catch (e: Exception) {
             Log.e("GameViewModel", "Errore durante il resume della partita: ${e.message}", e)
             _uiState.update { it.copy(isLoading = false) }
-            return false
+            return null
         }
     }
 
@@ -135,7 +136,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 maxErrors = 3
                 _uiState.update { it.copy(remainingHints = 3) }
             }
-            Difficulty.DIFFICULT -> {
+            Difficulty.HARD -> {
                 maxErrors = 2
                 _uiState.update { it.copy(remainingHints = 2) }
             }

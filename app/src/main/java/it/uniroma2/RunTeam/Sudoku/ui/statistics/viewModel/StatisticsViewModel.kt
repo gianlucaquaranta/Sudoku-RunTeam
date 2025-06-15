@@ -27,7 +27,7 @@ class StatisticsViewModel(application: Application) : ViewModel() {
                 val difficulty = when (index) {
                     0 -> Difficulty.EASY
                     1 -> Difficulty.MEDIUM
-                    2 -> Difficulty.DIFFICULT
+                    2 -> Difficulty.HARD
                     else -> throw IllegalArgumentException("Invalid index")
                 }
                 val fetchedStatsEntity: GameStats? =
