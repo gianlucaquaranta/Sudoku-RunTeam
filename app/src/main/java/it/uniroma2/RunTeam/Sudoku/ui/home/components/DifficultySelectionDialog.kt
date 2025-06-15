@@ -30,7 +30,7 @@ fun DifficultySelectionDialog(
 
     val context = LocalContext.current
 
-    Dialog(onDismissRequest = onDismissRequest) { // Usa Dialog per un popup personalizzato
+    Dialog(onDismissRequest = onDismissRequest) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -44,7 +44,7 @@ fun DifficultySelectionDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Scegli la difficoltà", //TODO
+                    text = context.getString(R.string.difficulty_choice),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -69,7 +69,7 @@ fun DifficultySelectionDialog(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(onClick = onDismissRequest) {
-                    Text("Annulla") //TODO
+                    Text(context.getString(R.string.back_button))
                 }
             }
         }

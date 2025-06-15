@@ -41,4 +41,6 @@
     <string name="errors_1_popup">Hai commesso </string>
     <string name="errors_2_popup">errori su </string>
     <string name="restart_popup">Ricomincia</string>
+    <string name="back_button">Annulla</string>
+    <string name="difficulty_choice">Scegli una difficoltà</string>
 </resources>

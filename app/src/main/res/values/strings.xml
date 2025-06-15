@@ -41,6 +41,8 @@
     <string name="errors_1_popup">You made </string>
     <string name="errors_2_popup">mistakes out of </string>
     <string name="restart_popup">Restart Game</string>
+    <string name="back_button">Back</string>
+    <string name="difficulty_choice">Choose difficulty</string>
 
 
 </resources>
