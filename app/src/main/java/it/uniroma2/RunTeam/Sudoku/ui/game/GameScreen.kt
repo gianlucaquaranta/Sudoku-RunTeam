@@ -16,7 +16,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
-import it.uniroma2.RunTeam.Sudoku.CelebrationConfetti
+import it.uniroma2.RunTeam.Sudoku.ui.game.components.CelebrationConfetti
 import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout

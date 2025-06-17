@@ -43,12 +43,13 @@ fun GameTopBar(    seconds: Int,
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 8.dp)
-            ) {
+            ) {/*
                 Icon(
                     imageVector = Icons.Default.Timer,
                     contentDescription = "Timer"
                 )
                 Spacer(modifier = Modifier.width(4.dp))
+                */
                 GameTimer(seconds = seconds)
             }
         }

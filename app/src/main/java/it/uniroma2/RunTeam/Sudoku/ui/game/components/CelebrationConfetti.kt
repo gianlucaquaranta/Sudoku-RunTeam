@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku
+package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
