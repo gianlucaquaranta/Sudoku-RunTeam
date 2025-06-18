@@ -93,11 +93,12 @@ object SudokuSuggester {
                 }
             }
 
-            // Prendi la cella con meno opzioni disponibili
+            // Prende la cella con una opzione disponibile, altrimenti continua ad iterare aumentando la distanza nella quale guardare
             candidates.minByOrNull { it.second }?.let { (cell, _) ->
-                getPossibleValues(grid, cell.row, cell.col).firstOrNull()?.let { value ->
+                val possibleValues = getPossibleValues(grid, cell.row, cell.col)
+                if(possibleValues.size == 1){
                     val newCell = cell.copy()
-                    newCell.updateValue(value)
+                    newCell.updateValue(possibleValues.first())
                     return newCell
                 }
             }
