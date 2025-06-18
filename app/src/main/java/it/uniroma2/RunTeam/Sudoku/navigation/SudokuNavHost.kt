@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import it.uniroma2.RunTeam.Sudoku.ui.home.HomeScreen
 import it.uniroma2.RunTeam.Sudoku.ui.game.GameScreen
-import it.uniroma2.RunTeam.Sudoku.ui.home.language.LanguageScreen
+import it.uniroma2.RunTeam.Sudoku.ui.language.LanguageScreen
 import it.uniroma2.RunTeam.Sudoku.ui.statistics.StatisticsScreen
 import java.util.Locale
 import it.uniroma2.RunTeam.Sudoku.LocalAppLocale
@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import it.uniroma2.RunTeam.Sudoku.ScreenWithNav
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
-import it.uniroma2.RunTeam.Sudoku.ui.home.settings.SettingsScreen
+import it.uniroma2.RunTeam.Sudoku.ui.settings.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

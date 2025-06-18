@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.settings.components
+package it.uniroma2.RunTeam.Sudoku.ui.settings.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

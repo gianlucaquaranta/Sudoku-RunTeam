@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.settings
+package it.uniroma2.RunTeam.Sudoku.ui.settings
 
 
 import androidx.compose.foundation.layout.*
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.R
-import it.uniroma2.RunTeam.Sudoku.ui.home.settings.components.ThemeOptionItem
+import it.uniroma2.RunTeam.Sudoku.ui.settings.components.ThemeOptionItem
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)

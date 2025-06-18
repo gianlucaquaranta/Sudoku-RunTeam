@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.language.components
+package it.uniroma2.RunTeam.Sudoku.ui.language.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -23,7 +23,8 @@ import androidx.compose.ui.res.stringResource
 fun LanguageOption(
     languageResId: Int,
     flag: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier
 ) {
     val languageName = stringResource(id = languageResId)  // Ottiene la stringa localizzata
 
@@ -47,7 +48,7 @@ fun LanguageOption(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = languageName,  // Usa la stringa localizzata
+                text = languageName,
                 style = MaterialTheme.typography.bodyLarge
             )
         }
