@@ -1,5 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.viewModel
 
+import android.util.Log
 import it.uniroma2.RunTeam.Sudoku.model.Cell
 import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
 
@@ -8,8 +9,11 @@ object SudokuSuggester {
     fun getHint(grid: SudokuGrid, selected: Cell): Cell? {
         // 1. Prima controlla la cella selezionata
         if (selected.value == 0) {
-            getPossibleValues(grid, selected.row, selected.col).firstOrNull()?.let { value ->
-                return selected.copy(newValue = value)
+            val possibleValues = getPossibleValues(grid, selected.row, selected.col)
+            if(possibleValues.size==1){
+                val newCell = selected.copy()
+                newCell.updateValue(possibleValues.first())
+                return newCell
             }
         }
 
@@ -19,7 +23,7 @@ object SudokuSuggester {
         }
 
         // 3. Cerca nelle celle vicine (a strati concentrici)
-        return findNearbyHint(grid, selected.row, selected.col, maxDistance = 2)
+        return findNearbyHint(grid, selected.row, selected.col, maxDistance = 8)
     }
 
     private fun findHintInSubgrid(grid: SudokuGrid, row: Int, col: Int): Cell? {
@@ -30,10 +34,12 @@ object SudokuSuggester {
         for (r in subgridStartRow until subgridStartRow + 3) {
             for (c in subgridStartCol until subgridStartCol + 3) {
                 grid.getCell(r, c)?.let { cell ->
-                    if (cell.value == 0) {
+                    if (cell.value == 0 || cell.isIncorrect) {
                         val possibleValues = getPossibleValues(grid, r, c)
                         if (possibleValues.size == 1) {
-                            return cell.copy(newValue = possibleValues.first())
+                            val newCell = cell.copy()
+                            newCell.updateValue(possibleValues.first())
+                            return newCell
                         }
                     }
                 }
@@ -46,14 +52,16 @@ object SudokuSuggester {
             for (r in subgridStartRow until subgridStartRow + 3) {
                 for (c in subgridStartCol until subgridStartCol + 3) {
                     grid.getCell(r, c)?.let { cell ->
-                        if (cell.value == 0 && isValidPlacement(grid, r, c, num)) {
+                        if ((cell.value == 0 || cell.isIncorrect) && isValidPlacement(grid, r, c, num)) {
                             possibleCells.add(cell)
                         }
                     }
                 }
             }
             if (possibleCells.size == 1) {
-                return possibleCells.first().copy(newValue = num)
+                val newCell = possibleCells.first().copy()
+                newCell.updateValue(num)
+                return newCell
             }
         }
 
@@ -66,7 +74,7 @@ object SudokuSuggester {
             val maxRow = minOf(8, centerRow + distance)
             val minCol = maxOf(0, centerCol - distance)
             val maxCol = minOf(8, centerCol + distance)
-
+            Log.d("findNearbyHint", "minRow: $minRow; maxRow: $maxRow; minCol: $minCol; maxCol: $maxCol")
             val candidates = mutableListOf<Pair<Cell, Int>>()
 
             for (r in minRow..maxRow) {
@@ -75,7 +83,7 @@ object SudokuSuggester {
                     if ((r / 3) == (centerRow / 3) && (c / 3) == (centerCol / 3)) continue
 
                     grid.getCell(r, c)?.let { cell ->
-                        if (cell.value == 0) {
+                        if (cell.value == 0 || cell.isIncorrect) {
                             val possibleValues = getPossibleValues(grid, r, c)
                             if (possibleValues.isNotEmpty()) {
                                 candidates.add(cell to possibleValues.size)
@@ -88,7 +96,9 @@ object SudokuSuggester {
             // Prendi la cella con meno opzioni disponibili
             candidates.minByOrNull { it.second }?.let { (cell, _) ->
                 getPossibleValues(grid, cell.row, cell.col).firstOrNull()?.let { value ->
-                    return cell.copy(newValue = value)
+                    val newCell = cell.copy()
+                    newCell.updateValue(value)
+                    return newCell
                 }
             }
         }
@@ -96,7 +106,10 @@ object SudokuSuggester {
     }
 
     private fun getPossibleValues(grid: SudokuGrid, row: Int, col: Int): Set<Int> {
-        return (1..9).filter { num -> isValidPlacement(grid, row, col, num) }.toSet()
+        val possibleValues = (1..9).filter { num -> isValidPlacement(grid, row, col, num) }.toSet()
+        val p = possibleValues.toString()
+        Log.d("SudokuSuggester", "possible values: $p")
+        return possibleValues
     }
 
     private fun isValidPlacement(grid: SudokuGrid, row: Int, col: Int, num: Int): Boolean {
