@@ -29,7 +29,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.settings.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SudokuNavHost(navController: NavHostController) {
+fun SudokuNavHost(navController: NavHostController, onThemeChange: (Boolean) -> Unit) {
     val context = LocalContext.current
     val currentLocale = remember {
         mutableStateOf(
@@ -51,8 +51,8 @@ fun SudokuNavHost(navController: NavHostController) {
             AnimatedNavHost(
                 navController = navController,
                 startDestination = NavRoutes.HOME,
-                enterTransition = { slideInHorizontally() + fadeIn() },
-                exitTransition = { slideOutHorizontally() + fadeOut() },
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() },
                 popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) + fadeIn() },
                 popExitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() }
             ) {
@@ -112,8 +112,11 @@ fun SudokuNavHost(navController: NavHostController) {
                         currentRoute = NavRoutes.SETTINGS,
                         onNavigate = { navController.navigate(it) }
                     ) { padding ->
-                        SettingsScreen(navController = navController,
-                            modifier = Modifier.padding(padding))
+                        SettingsScreen(
+                            navController = navController,
+                            modifier = Modifier.padding(padding),
+                            onThemeSelected = onThemeChange
+                        )
                     }
                 }
             }
