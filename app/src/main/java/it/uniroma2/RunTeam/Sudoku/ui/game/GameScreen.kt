@@ -51,7 +51,6 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
                 }
             }
         }
-        gameViewModel.startTimer()
     }
 
     LaunchedEffect(navigateHome) {
@@ -64,6 +63,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
         topBar = {
             GameTopBar(
                 seconds = state.secondsElapsed,
+                onHint = { if (state.remainingHints > 0) gameViewModel.hint() },
                 onUndo = { gameViewModel.undo() },
                 onRedo = { gameViewModel.redo() },
                 onRestart = { gameViewModel.restartGame()},
@@ -114,7 +114,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             title = { Text(context.getString(R.string.new_game_popup)+"!") },
             text = {
                 val maxErrors = state.errors
-                Text( context.getString(R.string.errors_1_popup)+"$maxErrors"+ context.getString(R.string.errors_2_popup)+ "$maxErrors")
+                Text( context.getString(R.string.errors_1_popup)+"$maxErrors "+ context.getString(R.string.errors_2_popup)+ " $maxErrors")
             },
             confirmButton = {
                 Button(onClick = {
