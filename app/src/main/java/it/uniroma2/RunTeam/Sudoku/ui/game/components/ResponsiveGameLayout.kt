@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -8,10 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameState
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 
 
@@ -26,23 +27,21 @@ fun ResponsiveGameLayout(
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .padding(paddingValues)
-            .padding(8.dp)
+            .fillMaxSize()
     ) {
         if (isLandscape) {
             Row(
                 modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Parte sinistra: Sudoku Grid
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .size((configuration.screenWidthDp)*0.8)
+                        .fillMaxWidth()
                         .aspectRatio(1f)
-                        .padding(8.dp),
+                        .padding(vertical = 5.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (state.isLoading) {
@@ -53,20 +52,21 @@ fun ResponsiveGameLayout(
                                 gridCells = it.grid,
                                 currentlySelectedCell = state.selectedCell,
                                 onCellClick = { gameViewModel.onCellSelected(it) },
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.height(configuration.screenHeightDp.dp*0.8f)
+
                             )
                         }
                     }
                 }
 
                 // Parte destra: NumberPad
-                Column(
+                Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
-                        .padding(start = 8.dp),
-                    verticalArrangement = Arrangement.SpaceEvenly,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .padding(vertical = 5.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     NumberPad(
                         isNoteMode = state.isNoteMode,
@@ -79,7 +79,6 @@ fun ResponsiveGameLayout(
                             )
                         },
                         onDeleteClick = { handleDeleteClick(state, gameViewModel) },
-                        modifier = Modifier.fillMaxWidth(0.85f)
                     )
                 }
             }
@@ -88,13 +87,13 @@ fun ResponsiveGameLayout(
             // PORTRAIT: Griglia sopra, tastiera sotto
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(1f),
+                        .aspectRatio(1f)
+                        .padding(8.dp, 2.dp, 8.dp, 0.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (state.isLoading) {
@@ -111,10 +110,12 @@ fun ResponsiveGameLayout(
                     }
                 }
 
+                Spacer(modifier = Modifier.size(2.dp))
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 2.dp),
+                        .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -128,6 +129,8 @@ fun ResponsiveGameLayout(
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
+
+                Spacer(modifier = Modifier.size(40.dp))
 
                 NumberPad(
                     isNoteMode = state.isNoteMode,
