@@ -3,9 +3,12 @@ package it.uniroma2.RunTeam.Sudoku.ui.game.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
@@ -28,18 +31,18 @@ fun ResponsiveGameLayout(
             .padding(8.dp)
     ) {
         if (isLandscape) {
-            // 🔁 LANDSCAPE: Suddividi in due colonne
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 📦 Parte sinistra: Sudoku Grid
+                // Parte sinistra: Sudoku Grid
                 Box(
                     modifier = Modifier
                         .weight(1f)
+                        .size((configuration.screenWidthDp)*0.8)
                         .aspectRatio(1f)
-                        .padding(end = 8.dp),
+                        .padding(8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (state.isLoading) {
@@ -56,7 +59,7 @@ fun ResponsiveGameLayout(
                     }
                 }
 
-                // 🎯 Parte destra: Tastiera + Suggerimento
+                // Parte destra: NumberPad
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -78,13 +81,11 @@ fun ResponsiveGameLayout(
                         onDeleteClick = { handleDeleteClick(state, gameViewModel) },
                         modifier = Modifier.fillMaxWidth(0.85f)
                     )
-
-                    SuggestionButton(modifier = Modifier.fillMaxWidth(0.85f))
                 }
             }
 
         } else {
-            // 🔁 PORTRAIT: Griglia sopra, tastiera sotto
+            // PORTRAIT: Griglia sopra, tastiera sotto
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -110,7 +111,23 @@ fun ResponsiveGameLayout(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Errori: ${state.errors}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Text(
+                        text = "Suggerimenti: ${state.remainingHints}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
 
                 NumberPad(
                     isNoteMode = state.isNoteMode,
@@ -120,9 +137,6 @@ fun ResponsiveGameLayout(
                     modifier = Modifier.fillMaxWidth(0.9f)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                SuggestionButton(modifier = Modifier.fillMaxWidth(0.9f))
             }
         }
     }
