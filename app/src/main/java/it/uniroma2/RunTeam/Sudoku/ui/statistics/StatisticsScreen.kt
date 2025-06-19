@@ -47,6 +47,8 @@ fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier
     val isPhoneLandscape = configuration.screenWidthDp < 600 &&
             configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,6 +66,7 @@ fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .then(if (!isPhoneLandscape) Modifier.padding(16.dp) else Modifier)
+                .then(if (!isPhoneLandscape) Modifier.verticalScroll(scrollState) else Modifier)
         ) {
             DifficultyTabs(
                 difficulties = difficulties,
