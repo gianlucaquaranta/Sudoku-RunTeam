@@ -28,7 +28,7 @@ import kotlin.random.Random
 
 class GameViewModel(application: Application) : ViewModel() {
 
-    private val db = AppDatabase.getDatabase(application) // Corretto uso di application context
+    private val db = AppDatabase.getDatabase(application)
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
     private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
 
@@ -80,28 +80,35 @@ class GameViewModel(application: Application) : ViewModel() {
 
     suspend fun tryResumeGame(): Difficulty? {
         try {
-            val existingGame = savedGameRepository.getGameById(1)
+            val existingGame = savedGameRepository.getGameById()
+            val lastGame = existingGame?.lastOrNull()
 
             if (existingGame != null) {
                 // Converte i DTO in SudokuGrid "reali" con state per la UI
-                val currentGrid = existingGame.currentGridState.toSudokuGrid()
-                val solutionGrid = existingGame.solutionGridState.toSudokuGrid()
-                val difficultyGame = solutionGrid.difficulty
+                val currentGrid = lastGame?.currentGridState?.toSudokuGrid()
+                val solutionGrid = lastGame?.solutionGridState?.toSudokuGrid()
+                val difficultyGame = solutionGrid?.difficulty
 
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        sudokuGrid = currentGrid,
-                        solutionGridState = solutionGrid,
-                        errors = existingGame.remainingErrors,
-                        secondsElapsed = existingGame.elapsedTimeInSeconds,
-                        remainingHints = existingGame.remainingHints,
-                    )
+                if (lastGame != null) {
+                    this.solutionGrid = lastGame.solutionGridState.toSudokuGrid()
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            sudokuGrid = currentGrid,
+                            solutionGridState = solutionGrid,
+                            errors = lastGame.remainingErrors,
+                            secondsElapsed = lastGame.elapsedTimeInSeconds,
+                            remainingHints = lastGame.remainingHints,
+                            isGameCompleted = false,
+                            isGameLost = false
+                        )
+                    }
                 }
                 maxErrors = when(difficultyGame){
                     Difficulty.EASY -> { 5 }
                     Difficulty.MEDIUM -> { 3 }
                     Difficulty.HARD -> { 2 }
+                    null -> { 5 }
                 }
                 startTimer()
                 return difficultyGame
@@ -342,7 +349,6 @@ class GameViewModel(application: Application) : ViewModel() {
                 val remainingHints = currentState.remainingHints
 
                 val gameToSave = SavedGame(
-                    id = 1,
                     currentGridState = currentGrid.toDto(),
                     solutionGridState = currentSolutionGrid.toDto(),
                     remainingErrors = remainingErrors,
@@ -351,7 +357,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 )
 
                 try {
-                    savedGameRepository.updateGame(gameToSave)
+                    savedGameRepository.insertGame(gameToSave)
                     Log.d("GameViewModel", "Partita salvata con successo con ID: ${gameToSave.id}")
                 } catch (e: Exception) {
                     Log.e("GameViewModel", "Errore durante il salvataggio della partita: ${e.javaClass.simpleName} - ${e.message}", e)
@@ -396,7 +402,7 @@ class GameViewModel(application: Application) : ViewModel() {
                     totalTimePlayedSeconds = currentTime
                 )
             }
-            gameStatsRepository.updateGameStats(newStats) // Assumendo che updateGameStats faccia un UPSERT (INSERT or UPDATE)
+            gameStatsRepository.saveGameStats(newStats)
         }
     }
 

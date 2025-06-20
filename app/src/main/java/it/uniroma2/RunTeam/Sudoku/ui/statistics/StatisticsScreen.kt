@@ -1,11 +1,15 @@
 package it.uniroma2.RunTeam.Sudoku.ui.statistics
 
-import android.app.Application
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,8 +35,7 @@ import it.uniroma2.RunTeam.Sudoku.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier) {
-
+fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var selectedTabIndex by remember { mutableStateOf(0) }
     val difficulties = listOf(
@@ -39,6 +43,11 @@ fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier)
         context.getString(R.string.difficulty_medium),
         context.getString(R.string.difficulty_hard)
     )
+    val configuration = LocalConfiguration.current
+    val isPhoneLandscape = configuration.screenWidthDp < 600 &&
+            configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -54,20 +63,38 @@ fun StatisticsScreen(navController: NavController,modifier: Modifier = Modifier)
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
                 .fillMaxSize()
+                .padding(innerPadding)
+                .then(if (!isPhoneLandscape) Modifier.padding(16.dp) else Modifier)
+                .then(if (!isPhoneLandscape) Modifier.verticalScroll(scrollState) else Modifier)
         ) {
             DifficultyTabs(
                 difficulties = difficulties,
                 selectedIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it }
+                onTabSelected = { selectedTabIndex = it },
+                modifier = if (isPhoneLandscape) Modifier.padding(top = 8.dp) else Modifier
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            if (!isPhoneLandscape) Spacer(modifier = Modifier.height(24.dp))
 
-            DifficultyStatsSection(selectedTabIndex)
+            // SOLO PER LANDSCAPE: Box con scroll e altezza ottimizzata
+            if (isPhoneLandscape) {
+                DifficultyStatsSection(
+                    index = selectedTabIndex,
+                    isPhoneLandscape = true
+                )
+            }  else {
+                // PORTRAIT: layout originale
+                DifficultyStatsSection(
+                    index = selectedTabIndex,
+                    isPhoneLandscape = false,
+
+                )
+            }
         }
     }
 }
+
+
+
 

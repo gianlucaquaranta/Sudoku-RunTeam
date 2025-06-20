@@ -16,10 +16,10 @@ import it.uniroma2.RunTeam.Sudoku.database.entity.SavedGame
         SavedGame::class,
         GameStats::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = false
 )
-@TypeConverters(SudokuGridConverter::class) // Registra il TypeConverter
+@TypeConverters(SudokuGridConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun savedGameDao(): SavedGameDao

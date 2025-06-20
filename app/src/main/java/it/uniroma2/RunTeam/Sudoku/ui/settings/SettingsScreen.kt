@@ -1,4 +1,4 @@
-package it.uniroma2.RunTeam.Sudoku.ui.home.settings
+package it.uniroma2.RunTeam.Sudoku.ui.settings
 
 
 import androidx.compose.foundation.layout.*
@@ -11,13 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.R
-import it.uniroma2.RunTeam.Sudoku.ui.home.settings.components.ThemeOptionItem
+import it.uniroma2.RunTeam.Sudoku.ui.settings.components.ThemeOptionItem
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController,modifier: Modifier = Modifier) {
-
+fun SettingsScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    onThemeSelected: (Boolean) -> Unit
+) {
     val context = LocalContext.current
 
     Scaffold(
@@ -40,9 +43,15 @@ fun SettingsScreen(navController: NavController,modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ThemeOptionItem(title = context.getString(R.string.sel_theme_dark))
-            ThemeOptionItem(title = context.getString(R.string.sel_theme_light))
-            ThemeOptionItem(title = context.getString(R.string.sel_theme_jungle))
+            ThemeOptionItem(
+                title = context.getString(R.string.sel_theme_dark),
+                onClick = { onThemeSelected(true) }
+            )
+            ThemeOptionItem(
+                title = context.getString(R.string.sel_theme_light),
+                onClick = { onThemeSelected(false) }
+            )
         }
     }
 }
+

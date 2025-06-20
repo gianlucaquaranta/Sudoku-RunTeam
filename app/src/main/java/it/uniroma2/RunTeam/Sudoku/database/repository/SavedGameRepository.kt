@@ -13,8 +13,8 @@ class SavedGameRepository(private val savedGameDao: SavedGameDao) {
         savedGameDao.updateGame(savedGame)
     }
 
-    suspend fun getGameById(id: Int): SavedGame? {
-        return savedGameDao.getGameById(id)
+    suspend fun getGameById(): List<SavedGame>? {
+        return savedGameDao.getGameById()
     }
 
     suspend fun deleteGameById(id: Int) {

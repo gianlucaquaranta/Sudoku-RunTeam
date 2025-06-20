@@ -10,7 +10,7 @@ class GameStatsRepository(private val gameStatsDao: GameStatsDao) {
         return gameStatsDao.getStatsByDifficulty(difficulty)
     }
 
-    suspend fun updateGameStats(gameStats : GameStats) {
-        gameStatsDao.update(gameStats)
+    suspend fun saveGameStats(gameStats : GameStats) {
+        gameStatsDao.upsert(gameStats)
     }
 }

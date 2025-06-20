@@ -15,8 +15,8 @@ interface SavedGameDao {
     @Update
     suspend fun updateGame(savedGame: SavedGame)
 
-    @Query("SELECT * FROM saved_games WHERE id = :id")
-    suspend fun getGameById(id: Int): SavedGame?
+    @Query("SELECT * FROM saved_games")
+    suspend fun getGameById(): List<SavedGame>?
 
     @Query("DELETE FROM saved_games WHERE id = :id")
     suspend fun deleteGameById(id: Int)
