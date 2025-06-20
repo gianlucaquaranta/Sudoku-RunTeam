@@ -23,15 +23,14 @@ import it.uniroma2.RunTeam.Sudoku.database.dto.CellDto
 import it.uniroma2.RunTeam.Sudoku.database.dto.SudokuGridDto
 import it.uniroma2.RunTeam.Sudoku.database.entity.GameStats
 import it.uniroma2.RunTeam.Sudoku.database.repository.GameStatsRepository
-import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
+
+import kotlin.random.Random
 
 class GameViewModel(application: Application) : ViewModel() {
 
     private val db = AppDatabase.getDatabase(application)
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
     private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
-
-    private var isResumedGame: Boolean = false
 
     private val _uiState = MutableStateFlow(GameState()) //attributo privato per mantenere lo stato di gioco, modificabile perché Mutable ma solo da viewmodel
     val uiState: StateFlow<GameState> = _uiState.asStateFlow() //Pubblico ma read-only, serve alla UI per leggere lo stato del gioco
@@ -42,7 +41,7 @@ class GameViewModel(application: Application) : ViewModel() {
     private var timerJob: Job? = null
     private var initialGrid: SudokuGrid? = null
     private var solutionGrid: SudokuGrid? = null
-    private var maxErrors: Int = 0
+    var maxErrors: Int = 0
 
     private val _shouldNavigateHome = MutableStateFlow(false)
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome
@@ -114,6 +113,7 @@ class GameViewModel(application: Application) : ViewModel() {
                     Difficulty.HARD -> { 2 }
                     null -> { 5 }
                 }
+                startTimer()
                 return difficultyGame
             } else {
                 _uiState.update { it.copy(isLoading = false) }
@@ -154,6 +154,8 @@ class GameViewModel(application: Application) : ViewModel() {
             }
             null -> Log.e("GameViewModel", "Difficulty null")
         }
+        val hintsNum = _uiState.value.remainingHints
+        Log.d("GameViewModel", "$hintsNum")
         /*si riportano ai valori iniziali tutti i valori dello stato di gioco, poiché
         si potrebbe passare da questo metodo sia all'inizio di una partita, sia quando l'utente
         conclude una partita e seleziona "Nuova partita", dunque è necessario resettare lo stato
@@ -171,6 +173,7 @@ class GameViewModel(application: Application) : ViewModel() {
         }
         undoStack.clear()// ho fatto reset di undo/redo
         redoStack.clear()
+        startTimer()
     }
 
     private fun checkCell(row: Int, col: Int): Boolean {
@@ -189,7 +192,7 @@ class GameViewModel(application: Application) : ViewModel() {
     }
 
     fun toggleNoteMode() {
-        if(!_uiState.value.selectedCell?.isValid!!) _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
+        if( _uiState.value.selectedCell == null || !_uiState.value.selectedCell?.isValid!!) _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
     }
 
     fun updateCellValue(cell: Cell, newValue: Int) {
@@ -209,16 +212,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 checkGameCompletion()
             }
         }
-        /*
-        if(!checkCell(cell.row,cell.col)){
-            cell.markIncorrect()
-        } else {
-            cell.validate()
-            checkGameCompletion() // Aggiungi questo solo se è corretto,qui potremmo fare anche la logica degli errori
-        }
-                           //con un contatore ,oppure nell'if facciamo il contatore e se perde si crea un'altra fun
-         */
-    }                             //che gli esce un pop up che dice che ha perso
+    }
 
     fun clearCellValue(cell: Cell) {
         if(!_uiState.value.selectedCell?.isValid!!) {
@@ -231,6 +225,38 @@ class GameViewModel(application: Application) : ViewModel() {
                 cell.clearValue()
             }
         }
+    }
+
+    fun hint(){
+        val result = SudokuSuggester.getHint(_uiState.value.sudokuGrid!!)
+        Log.d("Hint", "Result: ${result.toString()}")
+        if(result != null){
+            val toChange = _uiState.value.sudokuGrid?.getCell(result.row, result.col)
+            updateCellValue(toChange!!, result.value)
+            _uiState.value.selectedCell = toChange
+        } else {
+            val emptyCells = mutableListOf<Cell>()
+            for (row in 0..8) {
+                for (col in 0..8) {
+                    _uiState.value.sudokuGrid?.getCell(row, col)?.let { cell ->
+                        if (cell.value == 0) {
+                            emptyCells.add(cell)
+                        }
+                    }
+                }
+            }
+
+            val randomCell = emptyCells[Random.nextInt(emptyCells.size)]
+            val rightCell = solutionGrid?.getCell(randomCell.row, randomCell.col)
+
+            updateCellValue(randomCell, rightCell?.value ?: 0)
+
+            _uiState.value.selectedCell = randomCell
+
+        }
+        _uiState.value.remainingHints--
+        val remainingHints = uiState.value.remainingHints
+        Log.d("GameViewModel", "remaining hints post-decremento: $remainingHints")
     }
 
     fun undo() {
@@ -251,10 +277,14 @@ class GameViewModel(application: Application) : ViewModel() {
             // Simile a undo, assicurati che i valori non siano nulli.
             undoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             // Assicurati che change.newValue non sia nullo.
+            //updateCellValue(cell!!, change.oldValue ?: 0)
+
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
             if(cell != null && checkCell(change.row, change.col)) {
                 cell.validate()
             }
+
+
         }
     }
 
