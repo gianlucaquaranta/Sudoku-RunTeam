@@ -1,7 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameState
@@ -60,26 +58,51 @@ fun ResponsiveGameLayout(
                 }
 
                 // Parte destra: NumberPad
-                Box(
+                Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .padding(vertical = 5.dp),
-                    contentAlignment = Alignment.Center
+                        .fillMaxHeight()
+                        .padding(vertical = 12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
                 ) {
-                    NumberPad(
-                        isNoteMode = state.isNoteMode,
-                        onNoteToggle = { gameViewModel.toggleNoteMode() },
-                        onNumberClick = { number ->
-                            handleNumberClick(
-                                state,
-                                number,
-                                gameViewModel
-                            )
-                        },
-                        onDeleteClick = { handleDeleteClick(state, gameViewModel) },
-                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Errori: ${state.errors}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = "Suggerimenti: ${state.remainingHints}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        NumberPad(
+                            isNoteMode = state.isNoteMode,
+                            onNoteToggle = { gameViewModel.toggleNoteMode() },
+                            onNumberClick = { number ->
+                                handleNumberClick(
+                                    state,
+                                    number,
+                                    gameViewModel
+                                )
+                            },
+                            onDeleteClick = { handleDeleteClick(state, gameViewModel) },
+                        )
+                    }
                 }
             }
 
@@ -89,9 +112,10 @@ fun ResponsiveGameLayout(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val gridWidth = configuration.screenHeightDp.dp*0.5f
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .height(gridWidth)
                         .aspectRatio(1f)
                         .padding(8.dp, 2.dp, 8.dp, 0.dp),
                     contentAlignment = Alignment.Center
@@ -112,10 +136,12 @@ fun ResponsiveGameLayout(
 
                 Spacer(modifier = Modifier.size(2.dp))
 
+                val horizontalPadd = ((configuration.screenWidthDp.dp-configuration.screenHeightDp.dp*0.5f)/2)+8.dp
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -137,7 +163,9 @@ fun ResponsiveGameLayout(
                     onNoteToggle = { gameViewModel.toggleNoteMode() },
                     onNumberClick = { number -> handleNumberClick(state, number, gameViewModel) },
                     onDeleteClick = { handleDeleteClick(state, gameViewModel) },
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                    modifier = Modifier
+                        .size(configuration.screenWidthDp.dp*0.85f,configuration.screenHeightDp.dp*0.4f)
+
                 )
 
             }
