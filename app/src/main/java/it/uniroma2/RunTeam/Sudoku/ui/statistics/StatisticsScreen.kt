@@ -55,6 +55,7 @@ fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(bottom = 65.dp)
                 .then(if (!isPhoneLandscape) Modifier.padding(16.dp) else Modifier)
                 .then(if (!isPhoneLandscape) Modifier.verticalScroll(scrollState) else Modifier)
         ) {

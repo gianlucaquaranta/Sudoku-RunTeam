@@ -41,22 +41,20 @@ fun HomeNav(
     val context = LocalContext.current
 
     NavigationBar(
-        modifier = Modifier.height(56.dp)
-        .clip(RoundedCornerShape(20.dp))
+       // modifier = Modifier.height(56.dp) .clip(RoundedCornerShape(20.dp))
     )  {
         NavigationBarItem(
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home",
-                    modifier = Modifier
-                        .padding(top = 15.dp)
+                    //modifier = Modifier.padding(top = 15.dp)
                 )
             },
             label = {
                 Text(
                     "Home",
-                    modifier = Modifier.padding(bottom =0.dp), // sposta il testo leggermente in alto
+                    //modifier = Modifier.padding(bottom =0.dp), // sposta il testo leggermente in alto
                 )
             },
             selected = currentRoute == NavRoutes.HOME,
@@ -67,14 +65,13 @@ fun HomeNav(
                 Icon(
                     imageVector = Icons.Default.BarChart,
                     contentDescription = "Statistics",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
+                    //modifier = Modifier.padding(top = 15.dp) // sposta l'icona leggermente in basso
                 )
             },
             label = {
                 Text(
                     context.getString(R.string.statistics),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
+                    //modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
                 )
             },
             selected = currentRoute == NavRoutes.STATISTICS,
@@ -85,14 +82,13 @@ fun HomeNav(
                 Icon(
                     imageVector = Icons.Default.Language,
                     contentDescription = "Language",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
+                    //modifier = Modifier.padding(top = 15.dp) // sposta l'icona leggermente in basso
                 )
             },
             label = {
                 Text(
                     context.getString(R.string.language),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
+                    //modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
                 )
             },
             selected = currentRoute == NavRoutes.LANGUAGE,
@@ -103,14 +99,13 @@ fun HomeNav(
                 Icon(
                     imageVector = Icons.Default.ColorLens,
                     contentDescription = "Theme",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
+                    //modifier = Modifier.padding(top = 15.dp) // sposta l'icona leggermente in basso
                 )
             },
             label = {
                 Text(
                     context.getString(R.string.settings),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
+                    //modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
                 )
             },
             selected = currentRoute == NavRoutes.SETTINGS,

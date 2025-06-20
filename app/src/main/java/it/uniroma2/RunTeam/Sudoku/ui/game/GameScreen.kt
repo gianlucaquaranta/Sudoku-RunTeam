@@ -1,7 +1,9 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
 import android.app.Application
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -102,10 +104,13 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             title = { Text(context.getString(R.string.congratulations_popup)+"!!!") },
             text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
-                Button(onClick = {
-                    gameViewModel.createGrid(context, currentDifficulty)
-                }) {
-                    Text(context.getString(R.string.new_game_popup))
+                Box(modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center) {
+                    Button(onClick = {
+                        gameViewModel.createGrid(context, currentDifficulty)
+                    }) {
+                        Text(context.getString(R.string.new_game_popup))
+                    }
                 }
             }
         )
