@@ -19,11 +19,3 @@ fun GameTimer(seconds:Int) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GameTimerPreview() {
-    GameTimer(seconds = 125) // Mostra "02:05"
-}
-
-
-

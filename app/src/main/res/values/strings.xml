@@ -43,6 +43,8 @@
     <string name="restart_popup">Restart Game</string>
     <string name="back_button">Back</string>
     <string name="difficulty_choice">Choose difficulty</string>
+    <string name="errors_game_screen">Errors</string>
+    <string name="suggestion_game_screen">Suggestions</string>
 
 
 </resources>

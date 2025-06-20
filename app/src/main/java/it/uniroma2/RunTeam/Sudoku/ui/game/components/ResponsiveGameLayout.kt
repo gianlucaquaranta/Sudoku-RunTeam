@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import it.uniroma2.RunTeam.Sudoku.R
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameState
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 
@@ -26,6 +28,7 @@ fun ResponsiveGameLayout(
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -77,12 +80,12 @@ fun ResponsiveGameLayout(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Errori: ${state.errors}/${gameViewModel.maxErrors}",
+                            text = context.getString(R.string.errors_game_screen) + ":${state.errors}/${gameViewModel.maxErrors}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error
                         )
                         Text(
-                            text = "Suggerimenti: ${state.remainingHints}",
+                            text =  context.getString(R.string.suggestion_game_screen) +":${state.remainingHints}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
