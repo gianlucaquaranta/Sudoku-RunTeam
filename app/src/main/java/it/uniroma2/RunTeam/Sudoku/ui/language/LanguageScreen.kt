@@ -43,17 +43,6 @@ fun LanguageScreen(navController: NavController, modifier: Modifier = Modifier) 
     val isPhoneLandscape = !isTablet && isLandscape
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(context.getString(R.string.sel_language)) },
-                modifier = Modifier.height(if (isPhoneLandscape) 48.dp else 56.dp),
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
     ) { innerPadding ->
         // Calcolo dinamico degli spazi
         val topSpace = if (isPhoneLandscape) 10.dp else 50.dp//distanza da topbar a inzio card
