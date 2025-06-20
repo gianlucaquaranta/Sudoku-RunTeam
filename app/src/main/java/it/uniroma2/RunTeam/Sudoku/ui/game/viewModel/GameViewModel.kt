@@ -372,7 +372,7 @@ class GameViewModel(application: Application) : ViewModel() {
                     totalTimePlayedSeconds = currentTime
                 )
             }
-            gameStatsRepository.updateGameStats(newStats) // Assumendo che updateGameStats faccia un UPSERT (INSERT or UPDATE)
+            gameStatsRepository.saveGameStats(newStats)
         }
     }
 

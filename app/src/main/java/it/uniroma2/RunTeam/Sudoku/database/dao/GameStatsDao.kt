@@ -11,11 +11,8 @@ import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 @Dao
 interface GameStatsDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(gameStats: GameStats): Long // Ritorna l'id della riga inserita o -1 se fallisce a causa di IGNORE
-
-    @Update
-    suspend fun update(gameStats: GameStats)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(gameStats: GameStats)
 
     @Query("SELECT * FROM game_stats WHERE difficulty = :difficulty")
     suspend fun getStatsByDifficulty(difficulty: Difficulty): GameStats?
