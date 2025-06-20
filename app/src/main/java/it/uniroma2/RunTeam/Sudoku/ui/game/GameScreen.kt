@@ -146,7 +146,6 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
                     }
                 }
             }
-
         )
     }
 }
