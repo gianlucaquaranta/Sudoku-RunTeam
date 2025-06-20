@@ -50,16 +50,6 @@ fun StatisticsScreen(navController: NavController, modifier: Modifier = Modifier
     val scrollState = rememberScrollState()
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(context.getString(R.string.sel_stats)) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
     ) { innerPadding ->
         Column(
             modifier = Modifier

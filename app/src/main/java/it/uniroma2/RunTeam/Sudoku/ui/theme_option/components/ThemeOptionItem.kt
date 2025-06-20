@@ -3,7 +3,13 @@ package it.uniroma2.RunTeam.Sudoku.ui.theme_option.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -15,22 +21,29 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ThemeOptionItem(
     title: String,
-    onClick: (() -> Unit)? = null // vedremo poi in futuro
+    onClick: (() -> Unit)? = null,
+    modifier: Modifier,
+    flag: String
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable(enabled = onClick != null) { onClick?.invoke() }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .height(80.dp)
+            .clickable(enabled = onClick != null) { onClick?.invoke()
+            },
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.CenterStart
+                .padding(horizontal = 24.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(
+                imageVector = if (flag=="scuro") Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                contentDescription = null
+            )
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,

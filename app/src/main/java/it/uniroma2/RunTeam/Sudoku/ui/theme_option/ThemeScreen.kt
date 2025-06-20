@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.theme_option
 
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.R
@@ -21,36 +23,42 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     onThemeSelected: (Boolean) -> Unit
 ) {
+    val configuration = LocalConfiguration.current
     val context = LocalContext.current
+    val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val isPhoneLandscape = !isTablet && isLandscape
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(context.getString(R.string.sel_theme)) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
     ) { innerPadding ->
+        val topSpace = if (isPhoneLandscape) 10.dp else 50.dp//distanza da topbar a inzio card
+        val horizontalSpace = if (isPhoneLandscape) 20.dp else 10.dp
+        val cardSpacing = if (isPhoneLandscape) 12.dp else 16.dp
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Top),
+                .padding(
+                    top = innerPadding.calculateTopPadding() + topSpace,
+                    bottom = innerPadding.calculateBottomPadding(),
+                    start = horizontalSpace,
+                    end = horizontalSpace
+                ),
+            verticalArrangement = Arrangement.spacedBy(cardSpacing, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ThemeOptionItem(
                 title = context.getString(R.string.sel_theme_dark),
-                onClick = { onThemeSelected(true) }
+                onClick = { onThemeSelected(true) },modifier = Modifier
+                    .fillMaxWidth(),
+                flag ="scuro",
             )
             ThemeOptionItem(
                 title = context.getString(R.string.sel_theme_light),
-                onClick = { onThemeSelected(false) }
+                onClick = { onThemeSelected(false) },modifier = Modifier
+                    .fillMaxWidth(),
+                flag = "chiaro"
             )
+
         }
     }
 }
