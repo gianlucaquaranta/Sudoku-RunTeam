@@ -3,6 +3,7 @@ package it.uniroma2.RunTeam.Sudoku.ui.home.components
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Settings
@@ -51,7 +52,7 @@ fun HomeNav(
             onClick = { onNavigate(NavRoutes.LANGUAGE) }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
+            icon = { Icon(Icons.Default.ColorLens, contentDescription = "Settings") },
             label = { Text(text = context.getString(R.string.settings)) },
             selected = currentRoute == NavRoutes.SETTINGS,
             onClick = { onNavigate(NavRoutes.SETTINGS) } // placeholder

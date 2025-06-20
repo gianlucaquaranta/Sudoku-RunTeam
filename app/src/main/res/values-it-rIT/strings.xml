@@ -6,7 +6,7 @@
     <string name="rules">Regole</string>
     <string name="language">Lingua</string>
     <string name="resume">Riprendi</string>
-    <string name="settings">Impostazioni</string>>
+    <string name="settings">Tema</string>>
     <string name="sudoku_rules">
     &#8226; Ogni riga deve contenere le cifre da 1 a 9 senza ripetizioni.\n
     &#8226; Ogni colonna deve includere tutte le cifre da 1 a 9 senza duplicati.\n

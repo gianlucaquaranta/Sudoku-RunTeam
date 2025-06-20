@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import it.uniroma2.RunTeam.Sudoku.ScreenWithNav
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
-import it.uniroma2.RunTeam.Sudoku.ui.settings.SettingsScreen
+import it.uniroma2.RunTeam.Sudoku.ui.theme_option.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
