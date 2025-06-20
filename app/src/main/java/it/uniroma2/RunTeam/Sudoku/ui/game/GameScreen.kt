@@ -103,7 +103,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
                 Button(onClick = {
-                    gameViewModel.createGrid(context, currentDifficulty)// per ora solo easy poi ovviamente con una variabile scelta all'inizio si settera qua
+                    gameViewModel.createGrid(context, currentDifficulty)
                 }) {
                     Text(context.getString(R.string.new_game_popup))
                 }

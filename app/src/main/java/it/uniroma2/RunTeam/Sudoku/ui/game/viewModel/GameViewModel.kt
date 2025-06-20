@@ -63,10 +63,10 @@ class GameViewModel(application: Application) : ViewModel() {
         timerJob = null
     }
 
-//    fun resetTimer() {
-//        stopTimer()
-//        _uiState.update { it.copy(secondsElapsed = 0) }
-//    }
+    //fun resetTimer() {
+    //    stopTimer()
+    //    _uiState.update { it.copy(secondsElapsed = 0) }
+    //}
 
     fun createGrid(context: Context, difficulty: Difficulty) {
         isResumedGame = false
@@ -135,8 +135,8 @@ class GameViewModel(application: Application) : ViewModel() {
                 puzzle.getCell(row,col)?.value ?: 0
             }
         }
-
-        val puzzleCopy: SudokuGrid = SudokuGrid.fromValues(newGrid, puzzle.difficulty) //per non far condividere il riferimento alla stessa istanza sia a initialGrid che a al sudoku in _uiState
+        //Si crea una copia del puzzle per evitare che il sudoku mantenuto in GameState e l'attributo initialGrid condividano il riferimento alla stessa istanza
+        val puzzleCopy: SudokuGrid = SudokuGrid.fromValues(newGrid, puzzle.difficulty)
 
         initialGrid = puzzle
 
@@ -166,14 +166,16 @@ class GameViewModel(application: Application) : ViewModel() {
                 isLoading = false,
                 sudokuGrid = puzzleCopy,
                 selectedCell = null,
-                errors = it.errors,
-                remainingHints = hintsNum,
+                //errors = it.errors,
+                errors = 0,
+                //remainingHints = hintsNum,
                 isNoteMode = false,
+                secondsElapsed = 0,
                 isGameCompleted = false,
                 isGameLost = false
             )
         }
-        undoStack.clear()// ho fatto reset di undo/redo
+        undoStack.clear()// reset di undo/redo
         redoStack.clear()
         startTimer()
     }
