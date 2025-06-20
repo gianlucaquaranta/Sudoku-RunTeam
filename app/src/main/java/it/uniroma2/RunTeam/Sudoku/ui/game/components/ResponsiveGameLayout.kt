@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -46,11 +47,13 @@ fun ResponsiveGameLayout(
                         CircularProgressIndicator()
                     } else {
                         state.sudokuGrid?.let {
+                            val mheight = configuration.screenHeightDp.dp*0.8f
+                            Log.d("ResponsiveGameLayout-Landscape", "$mheight")
                             SudokuGrid(
                                 gridCells = it.grid,
                                 currentlySelectedCell = state.selectedCell,
                                 onCellClick = { gameViewModel.onCellSelected(it) },
-                                modifier = Modifier.height(configuration.screenHeightDp.dp*0.8f)
+                                modifier = Modifier.height(mheight)
 
                             )
                         }
@@ -61,8 +64,7 @@ fun ResponsiveGameLayout(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
-                        .padding(vertical = 12.dp),
+                        .fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -70,11 +72,11 @@ fun ResponsiveGameLayout(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(start = 15.dp, top = 10.dp, end = 15.dp, bottom = 2.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Errori: ${state.errors}",
+                            text = "Errori: ${state.errors}/${gameViewModel.maxErrors}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.error
                         )
@@ -87,7 +89,8 @@ fun ResponsiveGameLayout(
 
                     Box(
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .padding(2.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         NumberPad(
@@ -136,8 +139,6 @@ fun ResponsiveGameLayout(
 
                 Spacer(modifier = Modifier.size(2.dp))
 
-                val horizontalPadd = ((configuration.screenWidthDp.dp-configuration.screenHeightDp.dp*0.5f)/2)+8.dp
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -145,7 +146,7 @@ fun ResponsiveGameLayout(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Errori: ${state.errors}",
+                        text = "Errori: ${state.errors}/${gameViewModel.maxErrors}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -156,18 +157,30 @@ fun ResponsiveGameLayout(
                     )
                 }
 
-                Spacer(modifier = Modifier.size(40.dp))
-
-                NumberPad(
-                    isNoteMode = state.isNoteMode,
-                    onNoteToggle = { gameViewModel.toggleNoteMode() },
-                    onNumberClick = { number -> handleNumberClick(state, number, gameViewModel) },
-                    onDeleteClick = { handleDeleteClick(state, gameViewModel) },
+                Box(
                     modifier = Modifier
-                        .size(configuration.screenWidthDp.dp*0.85f,configuration.screenHeightDp.dp*0.4f)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    NumberPad(
+                        isNoteMode = state.isNoteMode,
+                        onNoteToggle = { gameViewModel.toggleNoteMode() },
+                        onNumberClick = { number ->
+                            handleNumberClick(
+                                state,
+                                number,
+                                gameViewModel
+                            )
+                        },
+                        onDeleteClick = { handleDeleteClick(state, gameViewModel) },
+                        modifier = Modifier
+                            .size(
+                                configuration.screenWidthDp.dp * 0.85f,
+                                configuration.screenHeightDp.dp * 0.4f
+                            )
 
-                )
-
+                    )
+                }
             }
         }
     }

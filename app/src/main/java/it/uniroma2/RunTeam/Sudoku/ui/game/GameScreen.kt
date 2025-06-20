@@ -1,6 +1,9 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
 import android.app.Application
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -9,17 +12,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.CelebrationConfetti
 import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
-import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
+import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModelFactory
 
 @Composable
 fun GameScreen(navController: NavHostController, gameStartMode: String, difficulty: Difficulty) {
@@ -114,20 +121,28 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             title = { Text(context.getString(R.string.new_game_popup)+"!") },
             text = {
                 val maxErrors = state.errors
-                Text( context.getString(R.string.errors_1_popup)+"$maxErrors "+ context.getString(R.string.errors_2_popup)+ " $maxErrors")
+                Text( context.getString(R.string.errors_1_popup)+" $maxErrors "+ context.getString(R.string.errors_2_popup)+ " $maxErrors")
             },
             confirmButton = {
-                Button(onClick = {
-                    gameViewModel.restartGame()
-                }) {
-                    Text(context.getString(R.string.restart_popup))
-                }
-                Button(onClick = {
-                    gameViewModel.createGrid(context, currentDifficulty)
-                }) {
-                    Text(context.getString(R.string.new_game_popup))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Button(
+                        onClick = { gameViewModel.restartGame() },
+                    ) {
+                        Text(context.getString(R.string.restart_popup))
+                    }
+                    Button(
+                        onClick = { gameViewModel.createGrid(context, currentDifficulty) }
+                    ) {
+                        Text(context.getString(R.string.new_game_popup))
+                    }
                 }
             }
+
         )
     }
 }

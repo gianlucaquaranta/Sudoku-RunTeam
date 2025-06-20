@@ -6,111 +6,102 @@ import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
 
 object SudokuSuggester {
 
-    fun getHint(grid: SudokuGrid, selected: Cell): Cell? {
-        // 1. Prima controlla la cella selezionata
-        if (selected.value == 0) {
-            val possibleValues = getPossibleValues(grid, selected.row, selected.col)
-            if(possibleValues.size==1){
-                val newCell = selected.copy()
-                newCell.updateValue(possibleValues.first())
-                return newCell
-            }
-        }
-
-        // 2. Cerca nella sotto-griglia 3x3
-        findHintInSubgrid(grid, selected.row, selected.col)?.let {
-            return it
-        }
-
-        // 3. Cerca nelle celle vicine (a strati concentrici)
-        return findNearbyHint(grid, selected.row, selected.col, maxDistance = 8)
+    fun getHint(grid: SudokuGrid): Cell? {
+        return findNakedSingle(grid)
+            ?: findHiddenSingle(grid)
     }
 
-    private fun findHintInSubgrid(grid: SudokuGrid, row: Int, col: Int): Cell? {
-        val subgridStartRow = (row / 3) * 3
-        val subgridStartCol = (col / 3) * 3
-
-        // Cerca Naked Single nella sotto-griglia
-        for (r in subgridStartRow until subgridStartRow + 3) {
-            for (c in subgridStartCol until subgridStartCol + 3) {
-                grid.getCell(r, c)?.let { cell ->
-                    if (cell.value == 0 || cell.isIncorrect) {
-                        val possibleValues = getPossibleValues(grid, r, c)
+    private fun findNakedSingle(grid: SudokuGrid): Cell? {
+        for (row in 0..8) {
+            for (col in 0..8) {
+                grid.getCell(row, col)?.let { cell ->
+                    if (cell.value == 0) {
+                        val possibleValues = getPossibleValues(grid, row, col)
                         if (possibleValues.size == 1) {
-                            val newCell = cell.copy()
-                            newCell.updateValue(possibleValues.first())
-                            return newCell
+                            Log.d("findNakedsingle", "cell: $cell, value: ${possibleValues.first()}")
+                            return cell.copy().apply { updateValue(possibleValues.first()) }
+                        }
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findHiddenSingle(grid: SudokuGrid): Cell? {
+        // Cerca Hidden Single in righe, colonne e sottogriglie
+        for (i in 0..8) {
+            // Controlla righe
+            findHiddenSingleInUnit(grid, UnitType.ROW, i)?.let {
+                Log.d("findHiddenSingle-ROW", "$it")
+                return it
+            }
+            // Controlla colonne
+            findHiddenSingleInUnit(grid, UnitType.COLUMN, i)?.let {
+                Log.d("findHiddenSingle-COLUMN", "$it")
+                return it
+            }
+            // Controlla sottogriglie 3x3
+            if (i % 3 == 0) {
+                findHiddenSingleInUnit(grid, UnitType.BOX, i)?.let {
+                    Log.d("findHiddenSingle-BOX", "$it")
+                    return it
+                }
+            }
+        }
+        return null
+    }
+
+    private fun findHiddenSingleInUnit(grid: SudokuGrid, unitType: UnitType, index: Int): Cell? {
+        val missingNumbers = (1..9).toMutableList()
+        val emptyCells = mutableListOf<Cell>()
+
+        // Trova numeri mancanti e celle vuote nell'unità specificata (riga/colonna/box)
+        when (unitType) {
+            UnitType.ROW -> {
+                for (col in 0..8) {
+                    grid.getCell(index, col)?.let { cell ->
+                        cell.value.takeIf { it != 0 }?.let { missingNumbers.remove(it) }
+                        if (cell.value == 0) emptyCells.add(cell)
+                    }
+                }
+            }
+            UnitType.COLUMN -> {
+                for (row in 0..8) {
+                    grid.getCell(row, index)?.let { cell ->
+                        cell.value.takeIf { it != 0 }?.let { missingNumbers.remove(it) }
+                        if (cell.value == 0) emptyCells.add(cell)
+                    }
+                }
+            }
+            UnitType.BOX -> {
+                val startRow = (index / 3) * 3
+                val startCol = (index % 3) * 3
+                for (row in startRow until startRow + 3) {
+                    for (col in startCol until startCol + 3) {
+                        grid.getCell(row, col)?.let { cell ->
+                            cell.value.takeIf { it != 0 }?.let { missingNumbers.remove(it) }
+                            if (cell.value == 0) emptyCells.add(cell)
                         }
                     }
                 }
             }
         }
 
-        // Cerca Hidden Single nella sotto-griglia
-        for (num in 1..9) {
-            val possibleCells = mutableListOf<Cell>()
-            for (r in subgridStartRow until subgridStartRow + 3) {
-                for (c in subgridStartCol until subgridStartCol + 3) {
-                    grid.getCell(r, c)?.let { cell ->
-                        if ((cell.value == 0 || cell.isIncorrect) && isValidPlacement(grid, r, c, num)) {
-                            possibleCells.add(cell)
-                        }
-                    }
-                }
+        // Per ogni numero mancante, controlla se c'è una sola cella possibile
+        for (num in missingNumbers) {
+            val possibleCells = emptyCells.filter { cell ->
+                isValidPlacement(grid, cell.row, cell.col, num)
             }
             if (possibleCells.size == 1) {
-                val newCell = possibleCells.first().copy()
-                newCell.updateValue(num)
-                return newCell
-            }
-        }
-
-        return null
-    }
-
-    private fun findNearbyHint(grid: SudokuGrid, centerRow: Int, centerCol: Int, maxDistance: Int): Cell? {
-        for (distance in 1..maxDistance) {
-            val minRow = maxOf(0, centerRow - distance)
-            val maxRow = minOf(8, centerRow + distance)
-            val minCol = maxOf(0, centerCol - distance)
-            val maxCol = minOf(8, centerCol + distance)
-            Log.d("findNearbyHint", "minRow: $minRow; maxRow: $maxRow; minCol: $minCol; maxCol: $maxCol")
-            val candidates = mutableListOf<Pair<Cell, Int>>()
-
-            for (r in minRow..maxRow) {
-                for (c in minCol..maxCol) {
-                    // Salta la sotto-griglia già controllata
-                    if ((r / 3) == (centerRow / 3) && (c / 3) == (centerCol / 3)) continue
-
-                    grid.getCell(r, c)?.let { cell ->
-                        if (cell.value == 0 || cell.isIncorrect) {
-                            val possibleValues = getPossibleValues(grid, r, c)
-                            if (possibleValues.isNotEmpty()) {
-                                candidates.add(cell to possibleValues.size)
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Prende la cella con una opzione disponibile, altrimenti continua ad iterare aumentando la distanza nella quale guardare
-            candidates.minByOrNull { it.second }?.let { (cell, _) ->
-                val possibleValues = getPossibleValues(grid, cell.row, cell.col)
-                if(possibleValues.size == 1){
-                    val newCell = cell.copy()
-                    newCell.updateValue(possibleValues.first())
-                    return newCell
-                }
+                return possibleCells[0].copy().apply { updateValue(num) }
             }
         }
         return null
     }
 
-    private fun getPossibleValues(grid: SudokuGrid, row: Int, col: Int): Set<Int> {
-        val possibleValues = (1..9).filter { num -> isValidPlacement(grid, row, col, num) }.toSet()
-        val p = possibleValues.toString()
-        Log.d("SudokuSuggester", "possible values: $p")
-        return possibleValues
+    private fun getPossibleValues(grid: SudokuGrid, row: Int, col: Int): List<Int> {
+        return (1..9).filter { num -> isValidPlacement(grid, row, col, num) }
     }
 
     private fun isValidPlacement(grid: SudokuGrid, row: Int, col: Int, num: Int): Boolean {
@@ -118,21 +109,20 @@ object SudokuSuggester {
         for (c in 0..8) {
             if (grid.getCell(row, c)?.value == num) return false
         }
-
         // Controlla colonna
         for (r in 0..8) {
             if (grid.getCell(r, col)?.value == num) return false
         }
-
         // Controlla box 3x3
-        val boxRow = (row / 3) * 3
-        val boxCol = (col / 3) * 3
-        for (r in boxRow until boxRow + 3) {
-            for (c in boxCol until boxCol + 3) {
+        val boxStartRow = (row / 3) * 3
+        val boxStartCol = (col / 3) * 3
+        for (r in boxStartRow until boxStartRow + 3) {
+            for (c in boxStartCol until boxStartCol + 3) {
                 if (grid.getCell(r, c)?.value == num) return false
             }
         }
-
         return true
     }
+
+    private enum class UnitType { ROW, COLUMN, BOX }
 }

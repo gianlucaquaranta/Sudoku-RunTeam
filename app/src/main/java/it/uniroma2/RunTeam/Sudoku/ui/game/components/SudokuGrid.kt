@@ -49,7 +49,7 @@ fun SudokuGrid(
                         // Determina il colore di sfondo
                         val backgroundColor = when {
                             isThisCellSelected && !cell.isIncorrect-> MaterialTheme.colorScheme.inversePrimary //Evidenzia la selezione
-                            cell.isIncorrect -> Color.Red // Evidenzia errore
+                            cell.isIncorrect -> MaterialTheme.colorScheme.error // Evidenzia errore
                             // Alternating background per i blocchi 3x3, più sottile
                             (rowIndex / 3 + colIndex / 3) % 2 == 0 -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                             else -> MaterialTheme.colorScheme.surface
@@ -118,9 +118,12 @@ fun SudokuCellDisplay(
                     if (cell.notes.contains(noteNumber)) {
                         Text(
                             text = noteNumber.toString(),
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp), // Molto piccolo
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.5.sp, lineHeight = 8.5.sp), // Molto piccolo
                             textAlign = TextAlign.Center,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            modifier = Modifier
+                                .aspectRatio(1f) // quadrato
+                                .fillMaxWidth(),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     } else {
                         Spacer(Modifier.fillMaxSize()) // Spazio vuoto se la nota non c'è
