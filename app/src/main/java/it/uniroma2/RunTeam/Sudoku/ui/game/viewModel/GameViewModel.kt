@@ -38,6 +38,7 @@ class GameViewModel(application: Application) : ViewModel() {
     private val undoStack = mutableStateListOf<Cell>()
     private val redoStack = mutableStateListOf<Cell>()
 
+    var isResumedGame: Boolean = false
     private var timerJob: Job? = null
     private var initialGrid: SudokuGrid? = null
     private var solutionGrid: SudokuGrid? = null
