@@ -2,6 +2,7 @@ package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameState
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
@@ -38,8 +41,8 @@ fun ResponsiveGameLayout(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
+                        .fillMaxSize()
+                        //.aspectRatio(1f)
                         .padding(vertical = 5.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -47,13 +50,11 @@ fun ResponsiveGameLayout(
                         CircularProgressIndicator()
                     } else {
                         state.sudokuGrid?.let {
-                            val mheight = configuration.screenHeightDp.dp*0.8f
-                            Log.d("ResponsiveGameLayout-Landscape", "$mheight")
                             SudokuGrid(
                                 gridCells = it.grid,
                                 currentlySelectedCell = state.selectedCell,
                                 onCellClick = { gameViewModel.onCellSelected(it) },
-                                modifier = Modifier.height(mheight)
+                                modifier = Modifier.fillMaxSize()
 
                             )
                         }
@@ -90,7 +91,7 @@ fun ResponsiveGameLayout(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(2.dp),
+                            .padding(5.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         NumberPad(
@@ -104,6 +105,8 @@ fun ResponsiveGameLayout(
                                 )
                             },
                             onDeleteClick = { handleDeleteClick(state, gameViewModel) },
+                            modifier = Modifier.fillMaxWidth(0.9f)
+
                         )
                     }
                 }
