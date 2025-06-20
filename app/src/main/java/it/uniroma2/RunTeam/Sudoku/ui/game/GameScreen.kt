@@ -122,6 +122,8 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             confirmButton = {
                 Button(onClick = {
                     gameViewModel.restartGame()
+                    gameViewModel.resetTimer()
+                    gameViewModel.startTimer()
                 }) {
                     Text(context.getString(R.string.restart_popup))
                 }

@@ -31,6 +31,8 @@ class GameViewModel(application: Application) : ViewModel() {
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
     private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
 
+    private var isResumedGame: Boolean = false
+
     private val _uiState = MutableStateFlow(GameState()) //attributo privato per mantenere lo stato di gioco, modificabile perché Mutable ma solo da viewmodel
     val uiState: StateFlow<GameState> = _uiState.asStateFlow() //Pubblico ma read-only, serve alla UI per leggere lo stato del gioco
 
@@ -61,12 +63,13 @@ class GameViewModel(application: Application) : ViewModel() {
         timerJob = null
     }
 
-//    fun resetTimer() {
-//        stopTimer()
-//        _uiState.update { it.copy(secondsElapsed = 0) }
-//    }
+    fun resetTimer() {
+        stopTimer()
+        _uiState.update { it.copy(secondsElapsed = 0) }
+    }
 
     fun createGrid(context: Context, difficulty: Difficulty) {
+        isResumedGame = false
         _uiState.update { it.copy(isLoading = true) }
         SudokuGenerator(context).generateSudoku(
             difficulty = difficulty,
@@ -79,6 +82,7 @@ class GameViewModel(application: Application) : ViewModel() {
 
     suspend fun tryResumeGame(): Difficulty? {
         try {
+            isResumedGame = true
             val existingGame = savedGameRepository.getGameById()
             val lastGame = existingGame?.lastOrNull()
 
@@ -89,7 +93,8 @@ class GameViewModel(application: Application) : ViewModel() {
                 val difficultyGame = solutionGrid?.difficulty
 
                 if (lastGame != null) {
-                    this.solutionGrid = lastGame.solutionGridState.toSudokuGrid()
+                    this.solutionGrid = solutionGrid
+                    this.initialGrid = currentGrid
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -160,7 +165,6 @@ class GameViewModel(application: Application) : ViewModel() {
                 selectedCell = null,
                 errors = 0,
                 isNoteMode = false,
-                secondsElapsed = 0,
                 isGameCompleted = false,
                 isGameLost = false
             )
@@ -227,8 +231,6 @@ class GameViewModel(application: Application) : ViewModel() {
                 cell.clearValue()
             }
         }
-
-
     }
 
     fun undo() {
@@ -257,10 +259,15 @@ class GameViewModel(application: Application) : ViewModel() {
     }
 
     fun restartGame() {
-        initializeGame(initialGrid!!, solutionGrid!!)
+        if (isResumedGame) {
+            restartGameAfterResume()
+        } else {
+            initializeGame(initialGrid!!, solutionGrid!!)
+        }
+        _uiState.update { it.copy(isGameCompleted = false, isGameLost = false) }
     }
 
-    fun oldRestartGame() {
+    fun restartGameAfterResume() {
         val currentSudokuGrid = _uiState.value.sudokuGrid
         if (currentSudokuGrid == null) {
             Log.w("GameViewModel", "SudokuGrid is null, cannot restart. Potrebbe essere necessario creare una nuova griglia.")
@@ -282,6 +289,7 @@ class GameViewModel(application: Application) : ViewModel() {
                     currentCell.copy()
                     currentCell.updateValue(0)
                     currentCell.clearNotes()
+                    currentCell.isIncorrect = false
                     currentCell
                 } else {
                     // Le celle iniziali rimangono invariate.
@@ -291,7 +299,6 @@ class GameViewModel(application: Application) : ViewModel() {
                 }
             }
         }
-
         // Aggiorna lo stato della UI con la nuova griglia resettata
         _uiState.update {
             it.copy(
@@ -303,8 +310,8 @@ class GameViewModel(application: Application) : ViewModel() {
         // Pulisci gli stack di undo e redo
         undoStack.clear()
         redoStack.clear()
-
         Log.d("GameViewModel", "Game restarted.")
+        return
     }
 
     fun onSaveExit() {
