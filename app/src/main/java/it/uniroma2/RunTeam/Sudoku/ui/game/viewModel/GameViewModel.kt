@@ -27,7 +27,7 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.ViewModel.GameState
 
 class GameViewModel(application: Application) : ViewModel() {
 
-    private val db = AppDatabase.getDatabase(application) // Corretto uso di application context
+    private val db = AppDatabase.getDatabase(application)
     private val savedGameRepository = SavedGameRepository(db.savedGameDao())
     private val gameStatsRepository = GameStatsRepository(db.gameStatsDao())
 

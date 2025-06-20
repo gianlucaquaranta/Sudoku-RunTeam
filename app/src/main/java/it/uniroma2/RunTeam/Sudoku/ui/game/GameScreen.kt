@@ -29,6 +29,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
     val gameViewModel: GameViewModel = viewModel(
         factory = GameViewModelFactory(application)
     )
+
     val state by gameViewModel.uiState.collectAsState()
     val navigateHome by gameViewModel.shouldNavigateHome.collectAsState()
     val gameState by gameViewModel.uiState.collectAsState()
@@ -36,22 +37,24 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
     val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
     var currentDifficulty = difficulty
 
-    LaunchedEffect(gameStartMode) { // Esegui questo effetto quando gameStartMode cambia (o all'inizio)
-        when (gameStartMode) {
-            NavRoutes.GAME -> {
-                gameViewModel.createGrid(context, difficulty)
-            }
-            NavRoutes.RESUME -> {
-                val gameLoaded = gameViewModel.tryResumeGame()
-                if (gameLoaded!=null) {
-                    currentDifficulty = gameLoaded //Setto qui la difficoltà della partita caricata
-                }else{
-                    currentDifficulty = Difficulty.EASY //Eventualità nel caso in cui non trovi nessuna partita caricata
-                    gameViewModel.createGrid(context, currentDifficulty)
+    LaunchedEffect(gameStartMode) {
+        if (gameViewModel.uiState.value.sudokuGrid == null) {
+            when (gameStartMode) {
+                NavRoutes.GAME -> {
+                    gameViewModel.createGrid(context, difficulty)
+                }
+                NavRoutes.RESUME -> {
+                    val gameLoaded = gameViewModel.tryResumeGame()
+                    if (gameLoaded != null) {
+                        currentDifficulty = gameLoaded
+                    } else {
+                        currentDifficulty = Difficulty.EASY
+                        gameViewModel.createGrid(context, currentDifficulty)
+                    }
                 }
             }
+            gameViewModel.startTimer()
         }
-        gameViewModel.startTimer()
     }
 
     LaunchedEffect(navigateHome) {
@@ -114,7 +117,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             title = { Text(context.getString(R.string.new_game_popup)+"!") },
             text = {
                 val maxErrors = state.errors
-                Text( context.getString(R.string.errors_1_popup)+"$maxErrors"+ context.getString(R.string.errors_2_popup)+ "$maxErrors")
+                Text( context.getString(R.string.errors_1_popup)+" $maxErrors "+ context.getString(R.string.errors_2_popup)+ " $maxErrors")
             },
             confirmButton = {
                 Button(onClick = {
