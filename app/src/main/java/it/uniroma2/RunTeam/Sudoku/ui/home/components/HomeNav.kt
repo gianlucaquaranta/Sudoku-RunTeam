@@ -40,85 +40,33 @@ fun HomeNav(
     val localeState = LocalAppLocale.current
     val context = LocalContext.current
 
-    NavigationBar(
-        modifier = Modifier.height(56.dp)
-        .clip(RoundedCornerShape(20.dp))
-    )  {
+    NavigationBar {
         NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "Home",
-                    modifier = Modifier
-                        .padding(top = 15.dp)
-                )
-            },
-            label = {
-                Text(
-                    "Home",
-                    modifier = Modifier.padding(bottom =0.dp), // sposta il testo leggermente in alto
-                )
-            },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+            label = { Text("Home") },
             selected = currentRoute == NavRoutes.HOME,
             onClick = { onNavigate(NavRoutes.HOME) }
         )
         NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.BarChart,
-                    contentDescription = "Statistics",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
-                )
-            },
-            label = {
-                Text(
-                    context.getString(R.string.statistics),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
-                )
-            },
+            icon = { Icon(Icons.Default.BarChart, contentDescription = "Statistiche") },
+            label = { Text(text = context.getString(R.string.statistics)) },
             selected = currentRoute == NavRoutes.STATISTICS,
-            onClick = { onNavigate(NavRoutes.STATISTICS) },
+            onClick = { onNavigate(NavRoutes.STATISTICS) }
         )
         NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Language,
-                    contentDescription = "Language",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
-                )
-            },
-            label = {
-                Text(
-                    context.getString(R.string.language),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
-                )
-            },
+            icon = { Icon(Icons.Default.Language, contentDescription = "Language") },
+            label = { Text(text = context.getString(R.string.language)) },
             selected = currentRoute == NavRoutes.LANGUAGE,
             onClick = { onNavigate(NavRoutes.LANGUAGE) }
         )
         NavigationBarItem(
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.ColorLens,
-                    contentDescription = "Theme",
-                    modifier = Modifier
-                        .padding(top = 15.dp) // sposta l'icona leggermente in basso
-                )
-            },
-            label = {
-                Text(
-                    context.getString(R.string.settings),
-                    modifier = Modifier.padding(bottom = 0.dp), // sposta il testo leggermente in alto
-                )
-            },
+            icon = { Icon(Icons.Default.ColorLens, contentDescription = "Settings") },
+            label = { Text(text = context.getString(R.string.settings)) },
             selected = currentRoute == NavRoutes.SETTINGS,
-            onClick = { onNavigate(NavRoutes.SETTINGS) }
+            onClick = { onNavigate(NavRoutes.SETTINGS) } // placeholder
         )
     }
 }
-
 
 
 
