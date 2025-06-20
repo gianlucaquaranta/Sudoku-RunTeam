@@ -74,6 +74,9 @@ fun DifficultyStatsSection(
             StatCard(label = context.getString(R.string.best_time), value = stats.bestTime)
             StatCard(label = context.getString(R.string.average_time), value = stats.averageTime)
             StatCard(label = context.getString(R.string.total_time), value = stats.totalTime)
+            if (isPhoneLandscape) {
+                StatCard(label = "", value = "")
+            }
         }
     }
 

@@ -63,10 +63,10 @@ class GameViewModel(application: Application) : ViewModel() {
         timerJob = null
     }
 
-    fun resetTimer() {
-        stopTimer()
-        _uiState.update { it.copy(secondsElapsed = 0) }
-    }
+//    fun resetTimer() {
+//        stopTimer()
+//        _uiState.update { it.copy(secondsElapsed = 0) }
+//    }
 
     fun createGrid(context: Context, difficulty: Difficulty) {
         isResumedGame = false
@@ -166,7 +166,8 @@ class GameViewModel(application: Application) : ViewModel() {
                 isLoading = false,
                 sudokuGrid = puzzleCopy,
                 selectedCell = null,
-                errors = 0,
+                errors = it.errors,
+                remainingHints = hintsNum,
                 isNoteMode = false,
                 isGameCompleted = false,
                 isGameLost = false
@@ -284,8 +285,6 @@ class GameViewModel(application: Application) : ViewModel() {
             if(cell != null && checkCell(change.row, change.col)) {
                 cell.validate()
             }
-
-
         }
     }
 
@@ -335,7 +334,9 @@ class GameViewModel(application: Application) : ViewModel() {
             it.copy(
                 sudokuGrid = currentSudokuGrid.copy(grid = newBoardCells),
                 selectedCell = null, // Deseleziona qualsiasi cella
-                isNoteMode = false // Eventualmente resetta la modalità note
+                isNoteMode = false, // Eventualmente resetta la modalità note
+                errors = it.errors,
+                remainingHints = it.remainingHints
             )
         }
         // Pulisci gli stack di undo e redo

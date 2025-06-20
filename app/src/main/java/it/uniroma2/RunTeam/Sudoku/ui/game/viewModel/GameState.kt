@@ -1,7 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.viewModel
 
 import it.uniroma2.RunTeam.Sudoku.model.Cell
-import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 import it.uniroma2.RunTeam.Sudoku.model.SudokuGrid
 
 data class GameState(
