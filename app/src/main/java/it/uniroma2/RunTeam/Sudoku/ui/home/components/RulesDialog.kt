@@ -55,7 +55,7 @@ fun RulesDialog(onDismiss: () -> Unit) {
                 modifier = Modifier
                     .heightIn(max = 300.dp)
                     .verticalScroll(scrollState)
-                    .padding(16.dp)
+                    .padding(8.dp)
             )
         },
         shape = RoundedCornerShape(16.dp)

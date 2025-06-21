@@ -47,4 +47,5 @@
     <string name="difficulty_choice">Scegli una difficoltà</string>
     <string name="errors_game_screen">Errori</string>
     <string name="suggestion_game_screen">Suggerimenti</string>
+    <string name="restart_confirmation">Sei sicuro di voler ricominciare la partita?</string>
 </resources>
