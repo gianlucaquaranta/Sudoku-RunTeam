@@ -7,9 +7,9 @@
     <string name="resume">Resume</string>
     <string name="settings">Theme</string>
     <string name="sudoku_rules">
-    &#8226; Each row must contain the digits from 1 to 9 without repetition.\n
-    &#8226; Each column must contain the digits from 1 to 9.\n
-    &#8226; Each of the 9 sub-grids (3x3) must also contain all digits from 1 to 9.\n
+    &#8226; Each row must contain the digits from 1 to 9, without repetitions;\n
+    &#8226; Each column must contain the digits from 1 to 9, without repetitions;\n
+    &#8226; Each of the 9 sub-grids (3x3) must also contain all digits from 1 to 9, without repetitions;\n
     &#8226; Use logic and deduction to solve the puzzle.\n
     &#8226; No guessing - pure strategy and patience!
     </string>

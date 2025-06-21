@@ -95,7 +95,7 @@ fun HomeScreen(
                 PlayButton(
                     onClick = { showDifficultyDialog = true },
                     modifier = Modifier
-                        .widthIn(min = 200.dp, max = 260.dp)
+                        .widthIn(min = 260.dp, max = 350.dp)
                         .height(52.dp))
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -103,7 +103,7 @@ fun HomeScreen(
                 ResumeButton(
                     onClick = onResumeClick,
                     modifier = Modifier
-                        .widthIn(min = 200.dp, max = 260.dp)
+                        .widthIn(min = 260.dp, max = 350.dp)
                         .height(52.dp)
                 )
             }
@@ -116,8 +116,8 @@ fun HomeScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(
-                    end = 20.dp,   // ← Regola la distanza dal bordo destro
-                    bottom = 16.dp // ← Regola l'altezza dal fondo (senza calcoli automatici)
+                    end = 20.dp,   // Regola la distanza dal bordo destro
+                    bottom = 16.dp // Regola l'altezza dal fondo (senza calcoli automatici)
                 )
         )
 

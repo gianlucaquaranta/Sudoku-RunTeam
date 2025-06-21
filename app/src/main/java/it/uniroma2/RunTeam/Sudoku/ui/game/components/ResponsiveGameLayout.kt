@@ -152,12 +152,12 @@ fun ResponsiveGameLayout(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Errori: ${state.errors}/${gameViewModel.maxErrors}",
+                        text = context.getString(R.string.errors_game_screen) + ":${state.errors}/${gameViewModel.maxErrors}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )
                     Text(
-                        text = "Suggerimenti: ${state.remainingHints}",
+                        text = context.getString(R.string.suggestion_game_screen) +":${state.remainingHints}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )

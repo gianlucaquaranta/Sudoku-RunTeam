@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -38,37 +39,38 @@ fun DifficultySelectionDialog(
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     text = context.getString(R.string.difficulty_choice),
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = { onDifficultySelected(Difficulty.EASY) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
                     Text(context.getString(R.string.difficulty_easy))
                 }
                 Button(
                     onClick = { onDifficultySelected(Difficulty.MEDIUM) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
                     Text(context.getString(R.string.difficulty_medium))
                 }
                 Button(
                     onClick = { onDifficultySelected(Difficulty.HARD) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
                     Text(context.getString(R.string.difficulty_hard))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                TextButton(onClick = onDismissRequest) {
+                TextButton(
+                    onClick = onDismissRequest,
+                    modifier = Modifier.fillMaxWidth(0.5f)
+                ) {
                     Text(context.getString(R.string.back_button))
                 }
             }

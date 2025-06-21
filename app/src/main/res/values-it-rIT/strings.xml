@@ -8,9 +8,9 @@
     <string name="resume">Riprendi</string>
     <string name="settings">Tema</string>>
     <string name="sudoku_rules">
-    &#8226; Ogni riga deve contenere le cifre da 1 a 9 senza ripetizioni.\n
-    &#8226; Ogni colonna deve includere tutte le cifre da 1 a 9 senza duplicati.\n
-    &#8226; Ogni sottomatrice 3×3 (i 9 quadratini) deve contenere tutte le cifre da 1 a 9.\n
+    &#8226; Ogni riga deve contenere le cifre da 1 a 9, senza ripetizioni;\n
+    &#8226; Ogni colonna deve includere tutte le cifre da 1 a 9, senza ripetizioni;\n
+    &#8226; Ogni sotto-griglia 3×3 deve contenere, a sua volta, tutte le cifre da 1 a 9 senza ripetizioni;\n
     &#8226; Usa logica e deduzione per risolvere il puzzle.\n
     &#8226; Niente tentativi a caso: solo strategia e pazienza!
     </string>
