@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -114,7 +114,8 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             onConfirm = {
                 showRestartDialog = false
                 gameViewModel.restartGame()
-            }
+            },
+            context=context
         )
     }
 
@@ -184,9 +185,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
 }
 
 @Composable
-fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    val restartText = LocalContext.current.getString(R.string.restart_confirmation)
-
+fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit,context: Context) {
     Dialog(onDismissRequest = { onDismiss() }) {
         Box(
             modifier = Modifier
@@ -215,7 +214,7 @@ fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
 
                 // Messaggio
                 Text(
-                    text = restartText,
+                    text =context.getString(R.string.restart_confirmation),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(horizontal = 8.dp),
                     textAlign = TextAlign.Center
@@ -233,7 +232,7 @@ fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    Text(LocalContext.current.getString(R.string.restart_popup))
+                    Text(context.getString(R.string.restart_popup))
                 }
             }
         }
