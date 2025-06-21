@@ -16,7 +16,7 @@ import it.uniroma2.RunTeam.Sudoku.database.entity.SavedGame
         SavedGame::class,
         GameStats::class
     ],
-    version = 10,
+    version = 12,
     exportSchema = false
 )
 @TypeConverters(SudokuGridConverter::class)

@@ -15,6 +15,9 @@ interface SavedGameDao {
     @Update
     suspend fun updateGame(savedGame: SavedGame)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(savedGame: SavedGame)
+
     @Query("SELECT * FROM saved_games")
     suspend fun getGameById(): List<SavedGame>?
 

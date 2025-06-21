@@ -357,6 +357,7 @@ class GameViewModel(application: Application) : ViewModel() {
 
         undoStack.clear()
         redoStack.clear()
+        startTimer()
         Log.d("GameViewModel", "Game restarted and internal state reset.")
     }
 
@@ -373,6 +374,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 val remainingHints = currentState.remainingHints
 
                 val gameToSave = SavedGame(
+                    id = 1,
                     currentGridState = currentGrid.toDto(),
                     solutionGridState = currentSolutionGrid.toDto(),
                     remainingErrors = remainingErrors,
@@ -381,7 +383,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 )
 
                 try {
-                    savedGameRepository.insertGame(gameToSave)
+                    savedGameRepository.updateGame(gameToSave)
                     Log.d("GameViewModel", "Partita salvata con successo con ID: ${gameToSave.id}")
                 } catch (e: Exception) {
                     Log.e("GameViewModel", "Errore durante il salvataggio della partita: ${e.javaClass.simpleName} - ${e.message}", e)

@@ -6,8 +6,8 @@ import it.uniroma2.RunTeam.Sudoku.database.dto.SudokuGridDto
 
 @Entity(tableName = "saved_games")
 data class SavedGame(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey()
+    val id: Int = 1,
     val currentGridState: SudokuGridDto, // Stato attuale della griglia
     val solutionGridState: SudokuGridDto, // Griglia con la soluzione
     val remainingErrors: Int,
