@@ -266,8 +266,9 @@ class GameViewModel(application: Application) : ViewModel() {
             val cell = _uiState.value.sudokuGrid?.getCell(change.row, change.col)
             redoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             cell?.unvalidate() //Per far sì che si possa rendere ricliccabile e rimodificabile una cella che era valida prima dell'undo
-            cell?.cleanIncorrect()
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
+            if(cell != null && (checkCell(change.row, change.col) || cell.value == 0)) cell.cleanIncorrect()
+            else cell?.markIncorrect()
         }
     }
 
@@ -279,15 +280,13 @@ class GameViewModel(application: Application) : ViewModel() {
             undoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             // Assicurati che change.newValue non sia nullo.
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
-            if(cell != null && checkCell(change.row, change.col)) {
+            if (cell != null && cell.value == 0) cell.cleanIncorrect()
+            else if(cell != null && checkCell(change.row, change.col)){
                 cell.cleanIncorrect()
-            }else{
-                cell?.markIncorrect()
-                _uiState.value.errors ++
-                if(_uiState.value.errors == maxErrors){
-                    _uiState.update { it.copy(isGameLost = true) }
-                }
+                cell.validate()
             }
+            else cell?.markIncorrect()
+
         }
     }
 
