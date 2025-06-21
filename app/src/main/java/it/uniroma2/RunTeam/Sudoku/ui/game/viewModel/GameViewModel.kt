@@ -281,11 +281,15 @@ class GameViewModel(application: Application) : ViewModel() {
             // Simile a undo, assicurati che i valori non siano nulli.
             undoStack.add(change.copy(oldValue = change.newValue ?: 0, newValue = change.oldValue ?: 0))
             // Assicurati che change.newValue non sia nullo.
-            //updateCellValue(cell!!, change.oldValue ?: 0)
-
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
             if(cell != null && checkCell(change.row, change.col)) {
-                cell.validate()
+                cell.isIncorrect = false
+            }else{
+                cell?.isIncorrect = true
+                _uiState.value.errors ++
+                if(_uiState.value.errors == maxErrors){
+                    _uiState.update { it.copy(isGameLost = true) }
+                }
             }
         }
     }
