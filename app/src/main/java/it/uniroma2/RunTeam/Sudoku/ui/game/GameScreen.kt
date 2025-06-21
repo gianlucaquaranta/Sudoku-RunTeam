@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -184,6 +185,8 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
 
 @Composable
 fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+    val restartText = LocalContext.current.getString(R.string.restart_confirmation)
+
     Dialog(onDismissRequest = { onDismiss() }) {
         Box(
             modifier = Modifier
@@ -212,7 +215,7 @@ fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
 
                 // Messaggio
                 Text(
-                    text = LocalContext.current.getString(R.string.restart_confirmation),
+                    text = restartText,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(horizontal = 8.dp),
                     textAlign = TextAlign.Center
