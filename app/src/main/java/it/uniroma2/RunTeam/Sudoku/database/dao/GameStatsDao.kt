@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import it.uniroma2.RunTeam.Sudoku.database.entity.GameStats
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 

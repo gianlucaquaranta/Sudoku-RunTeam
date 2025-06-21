@@ -12,5 +12,4 @@ data class GameStats(
     val wonGames: Int = 0,
     val lostGames: Int = 0,
     val totalTimePlayedSeconds: Int = 0,
-    // La media la calcoleremo dinamicamente o al momento del salvataggio
 )

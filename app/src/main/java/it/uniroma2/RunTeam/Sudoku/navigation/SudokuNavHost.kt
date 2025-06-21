@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -54,8 +52,8 @@ fun SudokuNavHost(navController: NavHostController, onThemeChange: (AppTheme) ->
                 startDestination = NavRoutes.HOME,
                 enterTransition = { fadeIn() },
                 exitTransition = { fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() }
+                popEnterTransition = { fadeIn() },
+                popExitTransition = { fadeOut() }
             ) {
                 composable(NavRoutes.HOME) {
                     ScreenWithNav(

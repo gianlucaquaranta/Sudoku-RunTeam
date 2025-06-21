@@ -4,9 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-// Non è necessario @Stable esplicitamente per le data class se tutti i parametri del costruttore sono val
-// e i tipi sono stabili (primitivi, String, altre classi stabili, o State<T>).
-// In questo caso, con `var value by mutableStateOf`, è implicitamente gestito per la ricomposizione.
 data class Cell(
     val row: Int,
     val col: Int,

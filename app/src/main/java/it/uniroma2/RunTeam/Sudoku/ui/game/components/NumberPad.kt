@@ -1,7 +1,5 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
-// con NumberPad, NumberKey, NumberButton
-// ...
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -10,8 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,9 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
-import it.uniroma2.RunTeam.Sudoku.R
-
 
 @Composable
 fun NumberPad(
@@ -36,8 +29,6 @@ fun NumberPad(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val context = LocalContext.current
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -92,29 +83,6 @@ fun NumberPad(
         }
     }
 }
-
-@Composable
-fun NumberKey(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    isSelected: Boolean = false // Aggiungiamo isSelected per il tasto Note
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.height(56.dp),
-        colors = if (isSelected)
-            ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            )
-        else
-            ButtonDefaults.buttonColors()
-    ) {
-        Text(label)
-    }
-}
-
 
 @Composable
 fun NumberButton(number: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
