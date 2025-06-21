@@ -166,9 +166,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 isLoading = false,
                 sudokuGrid = puzzleCopy,
                 selectedCell = null,
-                //errors = it.errors,
                 errors = 0,
-                //remainingHints = hintsNum,
                 isNoteMode = false,
                 secondsElapsed = 0,
                 isGameCompleted = false,
@@ -306,51 +304,67 @@ class GameViewModel(application: Application) : ViewModel() {
     fun restartGameAfterResume() {
         val currentSudokuGrid = _uiState.value.sudokuGrid
         if (currentSudokuGrid == null) {
-            Log.w("GameViewModel", "SudokuGrid is null, cannot restart. Potrebbe essere necessario creare una nuova griglia.")
-            // Potresti voler richiamare createGrid qui se non c'è una griglia,
-            // oppure semplicemente non fare nulla se non c'è una partita da riavviare.
+            Log.w("GameViewModel", "SudokuGrid is null, cannot restart.")
             return
         }
 
-        // Crea una nuova griglia basata su quella corrente,
-        // resettando le celle modificabili al loro stato 'initialValue' (se presente) o a 0.
+        // Qui ricrei la nuova griglia
         val newBoardCells = Array(currentSudokuGrid.grid.size) { r ->
             Array(currentSudokuGrid.grid[r].size) { c ->
                 val currentCell = currentSudokuGrid.grid[r][c]
                 if (!currentCell.isStartingCell) {
-                    // Se la cella non è una cella iniziale, resettala.
-                    // Resetta al valore iniziale se lo hai, altrimenti a 0.
-                    // Assumiamo che initialValue sia 0 per le celle vuote all'inizio
-                    // o che `value` di una startingCell sia il suo valore fisso.
-                    currentCell.copy()
-                    currentCell.updateValue(0)
-                    currentCell.clearNotes()
-                    currentCell.isIncorrect = false
-                    currentCell
+                    currentCell.copy().apply {
+                        updateValue(0)
+                        initialValue = 0
+                        isStartingCell = false
+                        clearNotes()
+                        isIncorrect = false
+                    }
                 } else {
-                    // Le celle iniziali rimangono invariate.
-                    // È importante restituire una copia se SudokuGrid o Cell sono data class
-                    // per garantire che i cambiamenti vengano rilevati se si aggiorna l'intera struttura.
-                    currentCell.copy() // O semplicemente currentCell se non è necessario creare copie per le starting cells
+                    currentCell.copy()
                 }
             }
         }
-        // Aggiorna lo stato della UI con la nuova griglia resettata
+
+        val newGrid = currentSudokuGrid.copy(grid = newBoardCells)
+
         _uiState.update {
             it.copy(
-                sudokuGrid = currentSudokuGrid.copy(grid = newBoardCells),
-                selectedCell = null, // Deseleziona qualsiasi cella
-                isNoteMode = false, // Eventualmente resetta la modalità note
-                errors = it.errors,
-                remainingHints = it.remainingHints
+                sudokuGrid = newGrid,
+                selectedCell = null,
+                isNoteMode = false,
+                errors = 0 // Resetta errori
             )
         }
-        // Pulisci gli stack di undo e redo
+
+        when(solutionGrid?.difficulty){
+            Difficulty.EASY -> {
+                maxErrors = 5
+                _uiState.update { it.copy(remainingHints = 5) }
+            }
+            Difficulty.MEDIUM -> {
+                maxErrors = 3
+                _uiState.update { it.copy(remainingHints = 3) }
+            }
+            Difficulty.HARD -> {
+                maxErrors = 2
+                _uiState.update { it.copy(remainingHints = 2) }
+            }
+            null -> Log.e("GameViewModel", "Difficulty null")
+        }
+
+        this.initialGrid = newGrid
+        this.solutionGrid = this.solutionGrid?.let { oldSolutionGrid ->
+            // Qui assicurati di ricreare la solution grid originale dal saved state
+            // Oppure, se la mantieni immutata dal resume, lasciarla com’è
+            oldSolutionGrid.copy()
+        }
+
         undoStack.clear()
         redoStack.clear()
-        Log.d("GameViewModel", "Game restarted.")
-        return
+        Log.d("GameViewModel", "Game restarted and internal state reset.")
     }
+
 
     fun onSaveExit() {
         viewModelScope.launch {

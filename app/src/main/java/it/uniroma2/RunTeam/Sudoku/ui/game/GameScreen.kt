@@ -3,7 +3,6 @@ package it.uniroma2.RunTeam.Sudoku.ui.game
 import android.app.Application
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -24,7 +23,6 @@ import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameViewModel
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.GameTopBar
 import it.uniroma2.RunTeam.Sudoku.R
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.CelebrationConfetti
 import it.uniroma2.RunTeam.Sudoku.navigation.NavRoutes
 import it.uniroma2.RunTeam.Sudoku.ui.game.components.ResponsiveGameLayout
