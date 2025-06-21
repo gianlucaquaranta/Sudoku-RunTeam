@@ -331,7 +331,8 @@ class GameViewModel(application: Application) : ViewModel() {
                 sudokuGrid = newGrid,
                 selectedCell = null,
                 isNoteMode = false,
-                errors = 0 // Resetta errori
+                errors = 0, // Resetta errori
+                secondsElapsed = 0
             )
         }
 
@@ -352,11 +353,7 @@ class GameViewModel(application: Application) : ViewModel() {
         }
 
         this.initialGrid = newGrid
-        this.solutionGrid = this.solutionGrid?.let { oldSolutionGrid ->
-            // Qui assicurati di ricreare la solution grid originale dal saved state
-            // Oppure, se la mantieni immutata dal resume, lasciarla com’è
-            oldSolutionGrid.copy()
-        }
+        this.solutionGrid = this.solutionGrid?.copy()
 
         undoStack.clear()
         redoStack.clear()
