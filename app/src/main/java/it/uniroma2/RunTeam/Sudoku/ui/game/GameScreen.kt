@@ -1,6 +1,7 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -113,7 +114,8 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             onConfirm = {
                 showRestartDialog = false
                 gameViewModel.restartGame()
-            }
+            },
+            context=context
         )
     }
 
@@ -183,7 +185,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
 }
 
 @Composable
-fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit,context: Context) {
     Dialog(onDismissRequest = { onDismiss() }) {
         Box(
             modifier = Modifier
@@ -212,7 +214,7 @@ fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
 
                 // Messaggio
                 Text(
-                    text = LocalContext.current.getString(R.string.restart_confirmation),
+                    text =context.getString(R.string.restart_confirmation),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(horizontal = 8.dp),
                     textAlign = TextAlign.Center
@@ -230,7 +232,7 @@ fun RestartGameDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    Text(LocalContext.current.getString(R.string.restart_popup))
+                    Text(context.getString(R.string.restart_popup))
                 }
             }
         }
