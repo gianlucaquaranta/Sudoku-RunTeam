@@ -11,10 +11,9 @@ data class Cell(
     val row: Int,
     val col: Int,
     var isStartingCell: Boolean = false, // Questo è il tuo "isInitial"
-    val initialValue: Int? = null, // Questo è il tuo "initialValue"
+    var initialValue: Int? = null, // Questo è il tuo "initialValue"
     val oldValue: Int?,
     val newValue: Int?,
-    var isIncorrectFix: Boolean = false
 ) {
     var value: Int by mutableStateOf(initialValue ?: 0) // Valore iniziale, 0 per vuoto
 
