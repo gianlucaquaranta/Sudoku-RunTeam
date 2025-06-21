@@ -1,8 +1,6 @@
 package it.uniroma2.RunTeam.Sudoku.ui.game.components
 
 import android.content.res.Configuration
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -10,10 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import it.uniroma2.RunTeam.Sudoku.R
 import it.uniroma2.RunTeam.Sudoku.ui.game.viewModel.GameState
@@ -198,7 +194,7 @@ private fun handleNumberClick(
     viewModel: GameViewModel
 ) {
     state.selectedCell?.let { cell ->
-        if (state.isNoteMode) {
+        if (state.isNoteMode && !cell.isValid) {
             cell.toggleNote(number)
         } else {
             if (cell.value == number && !cell.isValid) {

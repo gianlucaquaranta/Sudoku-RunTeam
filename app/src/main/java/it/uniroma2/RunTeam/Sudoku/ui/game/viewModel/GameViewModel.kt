@@ -63,11 +63,6 @@ class GameViewModel(application: Application) : ViewModel() {
         timerJob = null
     }
 
-    //fun resetTimer() {
-    //    stopTimer()
-    //    _uiState.update { it.copy(secondsElapsed = 0) }
-    //}
-
     fun createGrid(context: Context, difficulty: Difficulty) {
         isResumedGame = false
         _uiState.update { it.copy(isLoading = true) }
@@ -166,9 +161,7 @@ class GameViewModel(application: Application) : ViewModel() {
                 isLoading = false,
                 sudokuGrid = puzzleCopy,
                 selectedCell = null,
-                //errors = it.errors,
                 errors = 0,
-                //remainingHints = hintsNum,
                 isNoteMode = false,
                 secondsElapsed = 0,
                 isGameCompleted = false,
@@ -196,14 +189,17 @@ class GameViewModel(application: Application) : ViewModel() {
     }
 
     fun toggleNoteMode() {
-        if( _uiState.value.selectedCell == null || !_uiState.value.selectedCell?.isValid!!) _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
+        //if( _uiState.value.selectedCell == null || !_uiState.value.selectedCell?.isValid!!)
+            _uiState.update { it.copy(isNoteMode = !it.isNoteMode) }
     }
 
     fun updateCellValue(cell: Cell, newValue: Int) {
         val oldValue = cell.value
         if (oldValue != newValue && !cell.isValid) { //una cella valida non deve poter essere modificabile
-            undoStack.add(Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, newValue))
-            redoStack.clear()
+            if(!cell.isSuggested){ //Se una cella viene compilata da un suggerimento, non si deve poter fare undo/redo di essa
+                undoStack.add(Cell(cell.row, cell.col, cell.isStartingCell, cell.initialValue, oldValue, newValue))
+                redoStack.clear()
+            }
             cell.updateValue(newValue)
             if(!checkCell(cell.row,cell.col)){
                 cell.markIncorrect()
@@ -236,9 +232,10 @@ class GameViewModel(application: Application) : ViewModel() {
         Log.d("Hint", "Result: ${result.toString()}")
         if(result != null){
             val toChange = _uiState.value.sudokuGrid?.getCell(result.row, result.col)
+            toChange?.markSuggested()
             updateCellValue(toChange!!, result.value)
             _uiState.value.selectedCell = toChange
-        } else {
+        } else { //Se l'algoritmo in SudokuSuggester non riuscisse a suggerire alcuna cella, viene svelato il valore di una cella random
             val emptyCells = mutableListOf<Cell>()
             for (row in 0..8) {
                 for (col in 0..8) {
@@ -283,9 +280,9 @@ class GameViewModel(application: Application) : ViewModel() {
             // Assicurati che change.newValue non sia nullo.
             cell?.updateValue(change.oldValue ?: 0) // Modifica qui
             if(cell != null && checkCell(change.row, change.col)) {
-                cell.isIncorrect = false
+                cell.cleanIncorrect()
             }else{
-                cell?.isIncorrect = true
+                cell?.markIncorrect()
                 _uiState.value.errors ++
                 if(_uiState.value.errors == maxErrors){
                     _uiState.update { it.copy(isGameLost = true) }
@@ -325,7 +322,7 @@ class GameViewModel(application: Application) : ViewModel() {
                     currentCell.copy()
                     currentCell.updateValue(0)
                     currentCell.clearNotes()
-                    currentCell.isIncorrect = false
+                    currentCell.cleanIncorrect()
                     currentCell
                 } else {
                     // Le celle iniziali rimangono invariate.
