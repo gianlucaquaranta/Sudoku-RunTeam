@@ -1,12 +1,14 @@
 package it.uniroma2.RunTeam.Sudoku.ui.theme_option.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Nature
+import androidx.compose.material.icons.filled.Sailing
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -15,15 +17,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ThemeOptionItem(
     title: String,
     onClick: (() -> Unit)? = null,
-    modifier: Modifier,
-    flag: String
+    flag: String,
+    modifier: Modifier
 ) {
     Card(
         modifier = Modifier
@@ -41,7 +42,14 @@ fun ThemeOptionItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = if (flag=="scuro") Icons.Filled.DarkMode else Icons.Filled.LightMode,
+                imageVector = when (flag) {
+                    "scuro" -> Icons.Filled.DarkMode
+                    "chiaro" -> Icons.Filled.LightMode
+                    "jungle" -> Icons.Filled.Nature
+                    "blue" -> Icons.Filled.Sailing
+                    "aurora" -> Icons.Filled.Star
+                    else -> Icons.Filled.LightMode // Un valore predefinito se nessuna condizione è soddisfatta
+                },
                 contentDescription = null
             )
             Text(

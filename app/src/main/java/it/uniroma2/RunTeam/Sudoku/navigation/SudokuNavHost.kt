@@ -24,12 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import it.uniroma2.RunTeam.Sudoku.ScreenWithNav
+import it.uniroma2.RunTeam.Sudoku.model.AppTheme
 import it.uniroma2.RunTeam.Sudoku.model.Difficulty
 import it.uniroma2.RunTeam.Sudoku.ui.theme_option.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SudokuNavHost(navController: NavHostController, onThemeChange: (Boolean) -> Unit) {
+fun SudokuNavHost(navController: NavHostController, onThemeChange: (AppTheme) -> Unit) {
     val context = LocalContext.current
     val currentLocale = remember {
         mutableStateOf(

@@ -23,6 +23,8 @@
     <string name="sel_theme_light">Tema Chiaro</string>
     <string name="sel_theme_dark">Tema Scuro</string>
     <string name="sel_theme_jungle">Tema Giungla</string>
+    <string name="sel_theme_blue">Tema Oceano</string>
+    <string name="sel_theme_auroraDark">Tema AuroraDark</string>
     <string name="difficulty_easy">Facile</string>
     <string name="difficulty_medium">Medio</string>
     <string name="difficulty_hard">Difficile</string>
