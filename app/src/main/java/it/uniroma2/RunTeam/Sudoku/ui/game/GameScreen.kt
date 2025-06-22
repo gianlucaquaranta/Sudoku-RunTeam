@@ -128,7 +128,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             )
         }
         AlertDialog(
-            onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
+            onDismissRequest = {  },
             title = { Text(context.getString(R.string.congratulations_popup)+"!!!") },
             text = { Text(context.getString(R.string.you_win_popup)+"!") },
             confirmButton = {
@@ -154,7 +154,7 @@ fun GameScreen(navController: NavHostController, gameStartMode: String, difficul
             )
         }
         AlertDialog(
-            onDismissRequest = { /* Puoi ignorare o fare qualcosa */ },
+            onDismissRequest = {  },
             title = { Text(context.getString(R.string.you_lose_popup)+"!") },
             text = {
                 val maxErrors = state.errors

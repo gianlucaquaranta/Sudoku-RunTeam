@@ -40,7 +40,6 @@ data class Cell(
         if (!isStartingCell) {
             value = 0 // 0 per vuoto
             isIncorrect = false
-            // Non cancellare le note quando si cancella solo il valore, potrebbe essere intenzionale
         }
     }
 

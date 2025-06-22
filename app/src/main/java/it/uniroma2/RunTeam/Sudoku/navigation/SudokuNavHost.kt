@@ -103,7 +103,7 @@ fun SudokuNavHost(navController: NavHostController, onThemeChange: (AppTheme) ->
 
 
                 composable(NavRoutes.RESUME) {
-                    GameScreen(navController, NavRoutes.RESUME, Difficulty.EASY) //Solo per aggiungere il parametro, verrò poi settato correttamente in GameScreen
+                    GameScreen(navController, NavRoutes.RESUME, Difficulty.EASY)
                 }
 
                 composable(NavRoutes.SETTINGS) {

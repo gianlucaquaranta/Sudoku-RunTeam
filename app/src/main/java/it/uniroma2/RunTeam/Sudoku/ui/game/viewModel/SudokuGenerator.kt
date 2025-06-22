@@ -21,7 +21,7 @@ class SudokuGenerator(private val context: Context) {
             null,
             { response ->
                 try {
-                    Log.d("SudokuGenerator", "API Response: $response") // 👈 DEBUG
+                    Log.d("SudokuGenerator", "API Response: $response")
                     val puzzleGrid = parseGrid(response.getJSONArray("puzzle"))
                     val solutionGrid = parseGrid(response.getJSONArray("solution"))
 

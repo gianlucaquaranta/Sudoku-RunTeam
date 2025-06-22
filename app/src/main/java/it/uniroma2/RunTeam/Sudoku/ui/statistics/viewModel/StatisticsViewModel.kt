@@ -38,7 +38,7 @@ class StatisticsViewModel(application: Application) : ViewModel() {
                     _stats.value = DifficultyStats(
                         gamesPlayed = gamesPlayed.toString(),
                         gamesWon = fetchedStatsEntity.wonGames.toString(),
-                        bestTime = formatTime(fetchedStatsEntity.bestTimeSeconds), // Esempio se bestTime è un Long
+                        bestTime = formatTime(fetchedStatsEntity.bestTimeSeconds),
                         averageTime = calculateAndFormatAverageTime(
                             fetchedStatsEntity.totalTimePlayedSeconds,
                             fetchedStatsEntity.wonGames
@@ -56,8 +56,6 @@ class StatisticsViewModel(application: Application) : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                // Gestisci eventuali eccezioni durante il recupero dei dati
-                // Ad esempio, logga l'errore e/o imposta uno stato di errore nella UI
                 _stats.value = DifficultyStats() // Reimposta a valori di default in caso di errore
                 Log.e("StatisticsViewModel", "Errore durante il caricamento delle statistiche", e)
             }

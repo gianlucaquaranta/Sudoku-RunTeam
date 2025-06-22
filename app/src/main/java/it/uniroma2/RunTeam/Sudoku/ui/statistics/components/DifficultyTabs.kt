@@ -11,11 +11,11 @@ fun DifficultyTabs(
     difficulties: List<String>,
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier  // Aggiungi questo parametro
+    modifier: Modifier = Modifier
 ) {
     TabRow(
         selectedTabIndex = selectedIndex,
-        modifier = modifier  // Applica il modifier qui
+        modifier = modifier
     ) {
         difficulties.forEachIndexed { index, title ->
             Tab(

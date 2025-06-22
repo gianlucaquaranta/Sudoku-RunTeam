@@ -9,13 +9,13 @@ import it.uniroma2.RunTeam.Sudoku.database.entity.SavedGame
 
 @Dao
 interface SavedGameDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE) // Sostituisce la partita se esiste già un ID uguale
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(savedGame: SavedGame)
 
     @Update
     suspend fun updateGame(savedGame: SavedGame)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)// Sostituisce la partita se esiste già un ID uguale
     suspend fun upsert(savedGame: SavedGame)
 
     @Query("SELECT * FROM saved_games")

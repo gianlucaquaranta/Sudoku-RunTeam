@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.LocaleList
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
 import java.util.*
 
 val LocalAppLocale = compositionLocalOf { mutableStateOf(Locale("en")) }
